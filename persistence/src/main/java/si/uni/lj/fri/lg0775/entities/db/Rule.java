@@ -4,13 +4,25 @@ import si.uni.lj.fri.lg0775.entities.db.base.BaseEntity;
 import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
 @Table(name = "rules")
 @EntityListeners(BaseEntityListener.class)
-public class Rule extends BaseEntity {
+@NamedQueries({
+        // Pridobi pravila za določenega uporabnika in določeno aplikacijo
+        @NamedQuery(
+                name = "Rule.getRulesForApp",
+                query = "SELECT r FROM Rule r" +
+                        " WHERE r.endUser.client = :clientId" +
+                        " AND r.deleted = false" +
+                        " AND r.expirationDate > CURRENT_TIMESTAMP"
+        ),
+})
+public class Rule extends BaseEntity implements Serializable {
     @ManyToOne
     private EndUser endUser;
 
@@ -18,20 +30,25 @@ public class Rule extends BaseEntity {
     private Application application;
 
     @ManyToOne
-    private Flag<Object> flag;
+    private Flag flag;
 
     @Basic
-    private Instant expirationDate;
+    @NotNull
+    private int value;
+
+    @Basic
+    @NotNull
+    private Timestamp expirationDate;
 
     public boolean hasExpired() {
-        return expirationDate.isBefore(Instant.now());
+        return expirationDate.toInstant().isBefore(Instant.now());
     }
 
-    public Instant getExpirationDate() {
+    public Timestamp getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Instant expirationDate) {
+    public void setExpirationDate(Timestamp expirationDate) {
         this.expirationDate = expirationDate;
     }
 
@@ -51,11 +68,19 @@ public class Rule extends BaseEntity {
         this.application = application;
     }
 
-    public Flag<Object> getFlag() {
+    public Flag getFlag() {
         return flag;
     }
 
-    public void setFlag(Flag<Object> flags) {
+    public void setFlag(Flag flags) {
         this.flag = flags;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 }

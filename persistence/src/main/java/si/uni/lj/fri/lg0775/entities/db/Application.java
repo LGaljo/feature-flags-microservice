@@ -4,6 +4,8 @@ import si.uni.lj.fri.lg0775.entities.db.base.BaseEntity;
 import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -11,21 +13,30 @@ import java.util.List;
 @EntityListeners(BaseEntityListener.class)
 @NamedQueries({
         @NamedQuery(
-                name = "Application.findAll",
-                query = "SELECT a FROM Application a"
+                name = "Application.findAllExceptDeleted",
+                query = "SELECT a FROM Application a WHERE a.deleted = false"
         ),
+        // Get users of this application
         @NamedQuery(
-                name = "Application.getFlagsForApplication",
-                query = "SELECT f FROM Application a, Flag f" +
-                        " WHERE f.application.id = :applicationId"
+                name = "Application.getEndUsers",
+                query = "SELECT u FROM EndUser u" +
+                        " WHERE u.deleted = false" +
+                        " AND u.application.id = :applicationId"
         ),
 })
-public class Application extends BaseEntity {
+/*
+    Aplikacija je objekt, ki shrani njeno ime
+ */
+public class Application extends BaseEntity implements Serializable {
     @Basic
+    @NotNull
     private String name;
 
-    @OneToMany
-    private List<Flag<Object>> flags;
+    @Transient
+    private List<Flag> flags;
+
+    @Transient
+    private List<EndUser> users;
 
     public String getName() {
         return name;
@@ -35,11 +46,19 @@ public class Application extends BaseEntity {
         this.name = name;
     }
 
-    public List<Flag<Object>> getFlags() {
+    public List<Flag> getFlags() {
         return flags;
     }
 
-    public void setFlags(List<Flag<Object>> flags) {
+    public void setFlags(List<Flag> flags) {
         this.flags = flags;
+    }
+
+    public List<EndUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<EndUser> users) {
+        this.users = users;
     }
 }

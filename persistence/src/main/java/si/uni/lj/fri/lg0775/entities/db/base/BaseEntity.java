@@ -3,32 +3,31 @@ package si.uni.lj.fri.lg0775.entities.db.base;
 import javax.persistence.*;
 import javax.ws.rs.DefaultValue;
 import java.io.Serializable;
-import java.time.Instant;
-import java.util.UUID;
+import java.sql.Timestamp;
 
 @MappedSuperclass
 public class BaseEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "uuid")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @DefaultValue(value = "false")
     private boolean deleted;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private Timestamp createdAt;
 
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private Timestamp updatedAt;
 
     public BaseEntity() {
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -40,19 +39,19 @@ public class BaseEntity implements Serializable {
         this.deleted = deleted;
     }
 
-    public Instant getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

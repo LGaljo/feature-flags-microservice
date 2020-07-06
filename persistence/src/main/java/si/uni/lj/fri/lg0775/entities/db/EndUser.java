@@ -5,38 +5,33 @@ import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.UUID;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "end_users")
 @EntityListeners(BaseEntityListener.class)
 @NamedQueries({
+        // Pridobi podatke o uporabniku
         @NamedQuery(
                 name = "EndUser.getByClientID",
                 query = "SELECT u FROM EndUser u WHERE u.client = :clientId"
         ),
-        // Pridobi pravila za določenega uporabnika in določeno aplikacijo
-        @NamedQuery(
-                name = "EndUser.getRulesForApp",
-                query = "SELECT r FROM Rule r, Application a, EndUser u" +
-                        " WHERE r.application = :applicationId AND r.endUser.client = :clientId"
-        ),
 })
-public class EndUser extends BaseEntity {
+public class EndUser extends BaseEntity implements Serializable {
     @Basic
     @NotNull
-    private UUID client;
+    @Column(unique = true)
+    private String client;
 
-    @OneToOne
+    @ManyToOne
     @NotNull
     private Application application;
 
-    public UUID getClient() {
+    public String getClient() {
         return client;
     }
 
-    public void setClient(UUID client) {
+    public void setClient(String client) {
         this.client = client;
     }
 

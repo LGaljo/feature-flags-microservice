@@ -7,7 +7,7 @@ networks:
 services:
   db:
     image: postgres:12
-    restart: always
+    # restart: always
     container_name: db
     ports:
       - 5432:5432
@@ -18,11 +18,11 @@ services:
     networks:
       - feature-flags
 
-  adminer:
-    image: adminer
-    restart: always
-    container_name: adminer
-    ports:
-      - 8080:8080
-    networks:
-      - feature-flags
+#  adminer:
+#    image: adminer
+#    restart: always
+#    container_name: adminer
+#    ports:
+#      - 8080:8080
+#    networks:
+#      - feature-flags

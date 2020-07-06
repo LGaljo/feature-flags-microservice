@@ -1,23 +1,31 @@
 package si.uni.lj.fri.lg0775.entities.db;
 
-import si.uni.lj.fri.lg0775.entities.DataType;
+import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.db.base.BaseEntity;
 import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 
 import javax.persistence.*;
-import java.time.Instant;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "flags")
 @EntityListeners(BaseEntityListener.class)
-public class Flag<T> extends BaseEntity {
+@NamedQueries({
+        @NamedQuery(
+                name = "Flag.getFlagsForApplication",
+                query = "SELECT f FROM Flag f" +
+                        " WHERE f.application.id = :applicationId AND f.deleted = false"
+        ),
+})
+public class Flag extends BaseEntity implements Serializable {
     @Basic
-    private T value;
+    @NotNull
+    private int defaultValue;
 
     @Basic
-    private T defaultValue;
-
-    @Basic
+    @NotNull
+    @Column(unique = true)
     private String name;
 
     @Basic
@@ -25,26 +33,22 @@ public class Flag<T> extends BaseEntity {
 
     @Basic
     @Enumerated(EnumType.STRING)
+    @NotNull
     private DataType dataType;
 
     @ManyToOne
     @JoinColumn(name = "application_id")
     private Application application;
 
-    public T getDefaultValue() {
+    public Flag() {
+    }
+
+    public int getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(T defaultValue) {
+    public void setDefaultValue(int defaultValue) {
         this.defaultValue = defaultValue;
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
     }
 
     public String getName() {

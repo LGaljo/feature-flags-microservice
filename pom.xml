@@ -21,8 +21,9 @@
         <maven-test-plugin.version>2.22.0</maven-test-plugin.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <kumuluzee.version>3.9.0</kumuluzee.version>
-        <kumuluzee-rest.version>1.2.3</kumuluzee-rest.version>
+        <kumuluzee.version>3.10.0</kumuluzee.version>
+        <kumuluzee-rest.version>1.3.0</kumuluzee-rest.version>
+        <kumuluzee-cors.version>1.0.6</kumuluzee-cors.version>
     </properties>
 
     <dependencyManagement>

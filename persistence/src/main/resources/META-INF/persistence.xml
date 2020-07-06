@@ -12,16 +12,13 @@
         <class>si.uni.lj.fri.lg0775.entities.db.EndUser</class>
         <class>si.uni.lj.fri.lg0775.entities.db.Rule</class>
 
-        <class>si.uni.lj.fri.lg0775.entities.converters.UUIDAttributeConverter</class>
-        <class>si.uni.lj.fri.lg0775.entities.converters.InstantAttributeConverter</class>
-
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
-            <property name="javax.persistence.sql-load-script-source" value="sql-scripts/init-db.sql"/>
-<!--            <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>-->
-            <property name="eclipselink.session.customizer" value="si.uni.lj.fri.lg0775.entities.customizers.UUIDSequence"/>
+<!--            <property name="javax.persistence.sql-load-script-source" value="sql-scripts/init-db.sql"/>-->
+            <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>
+            <property name="eclipselink.allow-zero-id" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>

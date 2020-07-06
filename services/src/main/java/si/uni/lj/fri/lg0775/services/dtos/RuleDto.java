@@ -2,23 +2,22 @@ package si.uni.lj.fri.lg0775.services.dtos;
 
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
 
-public class FlagDto {
+public class RuleDto {
     private Long id;
-    private int defaultValue;
     private String name;
     private String description;
     private DataType dataType;
+    private int value;
 
-
-    public FlagDto() {
+    public RuleDto() {
     }
 
-    public FlagDto(Long id, int defaultValue, String name, String description, DataType dataType) {
+    public RuleDto(Long id, String name, String description, DataType dataType, int value) {
         this.id = id;
-        this.defaultValue = defaultValue;
         this.name = name;
         this.description = description;
         this.dataType = dataType;
+        this.value = value;
     }
 
     public Long getId() {
@@ -27,14 +26,6 @@ public class FlagDto {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public int getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(int defaultValue) {
-        this.defaultValue = defaultValue;
     }
 
     public String getName() {
@@ -59,5 +50,13 @@ public class FlagDto {
 
     public void setDataType(DataType dataType) {
         this.dataType = dataType;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 }

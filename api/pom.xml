@@ -28,27 +28,32 @@
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-core</artifactId>
-            <version>3.9.0</version>
+            <version>${kumuluzee.version}</version>
         </dependency>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-servlet-jetty</artifactId>
-            <version>3.9.0</version>
+            <version>${kumuluzee.version}</version>
         </dependency>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-cdi-weld</artifactId>
-            <version>3.9.0</version>
+            <version>${kumuluzee.version}</version>
         </dependency>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-jax-rs-jersey</artifactId>
-            <version>3.9.0</version>
+            <version>${kumuluzee.version}</version>
         </dependency>
         <dependency>
             <groupId>com.kumuluz.ee.rest</groupId>
             <artifactId>kumuluzee-rest-core</artifactId>
-            <version>1.2.3</version>
+            <version>${kumuluzee-rest.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.cors</groupId>
+            <artifactId>kumuluzee-cors</artifactId>
+            <version>${kumuluzee-cors.version}</version>
         </dependency>
     </dependencies>
 
