@@ -21,6 +21,14 @@ import java.time.Instant;
                         " AND r.deleted = false" +
                         " AND r.expirationDate > CURRENT_TIMESTAMP"
         ),
+        @NamedQuery(
+                name = "Rule.getRuleForUser",
+                query = "SELECT r FROM Rule r" +
+                        " WHERE r.endUser.id = :clientId" +
+                        " AND r.deleted = false" +
+                        " AND r.expirationDate > CURRENT_TIMESTAMP" +
+                        " ORDER BY r.createdAt DESC"
+        ),
 })
 public class Rule extends BaseEntity implements Serializable {
     @ManyToOne

@@ -99,12 +99,16 @@ public class ApplicationBean {
         if (em.find(Application.class, appId) == null) {
             throw new NotFoundException("Application not found");
         }
-        return em.createNamedQuery("Application.getEndUsers", EndUser.class)
-                .setParameter("applicationId", appId)
-                .getResultList()
+        return getUsersOfApp(appId)
                 .stream()
                 .map(DtoMapper::toEndUserDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<EndUser> getUsersOfApp(Long appId) {
+        return em.createNamedQuery("Application.getEndUsers", EndUser.class)
+                .setParameter("applicationId", appId)
+                .getResultList();
     }
 
     // Ustvari novo aplikacijo, na začetku vsebuje prazen seznam zastavic

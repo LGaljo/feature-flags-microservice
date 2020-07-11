@@ -11,6 +11,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import java.util.UUID;
 
 @ApplicationScoped
 public class Seed {
@@ -57,9 +58,12 @@ public class Seed {
         flagDto4.setDescription("Forth flag");
         flagBean.createFlag(flagDto4, app2.getId());
 
-        // Create EndUser
-        endUserBean.saveEndUser("ccd61ffc-7ca0-11ea-bc55-0242ac130003", app1.getId());
-        endUserBean.saveEndUser("d6baaedc-b35b-42d5-92dd-5b1bd6ead4d3", app1.getId());
-        endUserBean.saveEndUser("1e4c4c61-2a22-49de-aa50-026e47bb3a6c", app2.getId());
+        // Create EndUsers
+        for (int i = 0; i < 100; i++) {
+            endUserBean.saveEndUser(UUID.randomUUID().toString(), app1.getId());
+        }
+        for (int i = 0; i < 100; i++) {
+            endUserBean.saveEndUser(UUID.randomUUID().toString(), app2.getId());
+        }
     }
 }

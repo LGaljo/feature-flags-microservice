@@ -8,7 +8,7 @@ kumuluzee:
     name: dev
   datasources:
     - jndi-name: jdbc/feature-flags
-      connection-url: jdbc:postgresql://localhost:5432/feature-flags-db
+      connection-url: jdbc:postgresql://localhost:5433/feature-flags-db
       username: postgres
       password: adminpw
       pool:
