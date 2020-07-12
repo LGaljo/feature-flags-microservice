@@ -31,13 +31,4 @@ public class RuleResource {
                 .ok(ruleBean.createRule(crd, app_id, flag_id))
                 .build();
     }
-
-    @GET
-    public Response getRule(
-            @QueryParam("userId") Long user_id
-    ) {
-        return Response
-                .ok(ruleBean.getRule(user_id))
-                .build();
-    }
 }

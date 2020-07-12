@@ -118,7 +118,7 @@ public class ApplicationBean {
         if (appName != null && !appName.isBlank()) {
             application.setName(appName);
             application.setFlags(new ArrayList<>());
-            em.persist(application);
+            create(application);
         }
         return application;
     }

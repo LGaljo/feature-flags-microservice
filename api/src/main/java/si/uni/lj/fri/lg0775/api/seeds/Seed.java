@@ -31,32 +31,32 @@ public class Seed {
 
         // Create flags
         FlagDto flagDto1 = new FlagDto();
-        flagDto1.setDataType(DataType.INT);
+        flagDto1.setDataType(DataType.BOOL);
         flagDto1.setDefaultValue(0);
         flagDto1.setName("Flag1");
         flagDto1.setDescription("First flag");
-        flagBean.createFlag(flagDto1, app1.getId());
+        flagBean.createFlag(flagDto1, app1);
 
         FlagDto flagDto2 = new FlagDto();
-        flagDto2.setDataType(DataType.INT);
+        flagDto2.setDataType(DataType.BOOL);
         flagDto2.setDefaultValue(0);
         flagDto2.setName("Flag2");
         flagDto2.setDescription("Second flag");
-        flagBean.createFlag(flagDto2, app1.getId());
+        flagBean.createFlag(flagDto2, app1);
 
         FlagDto flagDto3 = new FlagDto();
-        flagDto3.setDataType(DataType.INT);
-        flagDto3.setDefaultValue(0);
+        flagDto3.setDataType(DataType.BOOL);
+        flagDto3.setDefaultValue(1);
         flagDto3.setName("Flag3");
         flagDto3.setDescription("Third flag");
-        flagBean.createFlag(flagDto3, app1.getId());
+        flagBean.createFlag(flagDto3, app1);
 
         FlagDto flagDto4 = new FlagDto();
         flagDto4.setDataType(DataType.BOOL);
         flagDto4.setDefaultValue(1);
         flagDto4.setName("Flag4");
         flagDto4.setDescription("Forth flag");
-        flagBean.createFlag(flagDto4, app2.getId());
+        flagBean.createFlag(flagDto4, app2);
 
         // Create EndUsers
         for (int i = 0; i < 100; i++) {

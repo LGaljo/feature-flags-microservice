@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-@RequestScoped
+@ApplicationScoped
 public class RuleBean {
     private static final Logger LOG = Logger.getLogger(RuleBean.class.getName());
 
@@ -130,16 +130,5 @@ public class RuleBean {
             // Persist
             create(rule);
         });
-    }
-
-    public List<RuleDto> getRule(Long user_id) {
-        List<Rule> rules = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
-                .setParameter("clientId", user_id)
-                .getResultList();
-
-        if (rules.isEmpty()) {
-            return null;
-        }
-        return DtoMapper.toRulesDto(rules);
     }
 }

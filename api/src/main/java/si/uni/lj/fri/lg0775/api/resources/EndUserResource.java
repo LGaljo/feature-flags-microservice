@@ -17,24 +17,33 @@ public class EndUserResource {
     private EndUserBean endUserBean;
 
     @POST
-    public Response registerUser(
+    public Response heartbeat(
             @QueryParam("client_id") String clientId,
             @QueryParam("app_id") Long appId
     ) {
         return Response
                 .status(Response.Status.CREATED)
-                .entity(endUserBean.saveEndUser(clientId, appId))
+                .entity(endUserBean.heartbeat(clientId, appId))
                 .build();
     }
 
     @GET
-    public Response getRulesForApp(
-            @QueryParam("app_id") Long appId,
+    public Response getRulesForAppByClientID(
             @QueryParam("client_id") String clientId
     ) {
         return Response
                 .status(Response.Status.OK)
                 .entity(endUserBean.getRulesForApp(clientId))
+                .build();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getRulesForAppByUserID(
+            @PathParam("id") Long user_id
+    ) {
+        return Response
+                .ok(endUserBean.getRule(user_id))
                 .build();
     }
 }

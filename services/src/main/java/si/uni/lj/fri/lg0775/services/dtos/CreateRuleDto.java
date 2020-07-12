@@ -1,9 +1,8 @@
 package si.uni.lj.fri.lg0775.services.dtos;
 
-import si.uni.lj.fri.lg0775.entities.DataType;
+import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 
 public class CreateRuleDto {

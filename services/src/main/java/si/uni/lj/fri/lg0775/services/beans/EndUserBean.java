@@ -10,6 +10,7 @@ import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -21,11 +22,14 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class EndUserBean {
 
-    @PersistenceContext(name="feature-flags")
+    @PersistenceContext(name = "feature-flags")
     private EntityManager em;
 
     @Inject
     private ApplicationBean applicationBean;
+
+    @Inject
+    private RuleBean ruleBean;
 
     // Create
     public void create(EndUser e) {
@@ -68,13 +72,23 @@ public class EndUserBean {
     }
 
     @Transactional
+    public EndUser heartbeat(String clientId, Long appId) {
+        try {
+            return em.createNamedQuery("EndUser.getByClientID", EndUser.class)
+                    .setParameter("clientId", clientId).getSingleResult();
+        } catch (NoResultException nre) {
+            return saveEndUser(clientId, appId);
+        }
+    }
+
+    @Transactional
     public EndUser saveEndUser(String clientId, Long appId) {
         EndUser endUser = new EndUser();
         Application application = applicationBean.getApplication(appId);
         if (clientId != null && application != null) {
             endUser.setApplication(application);
             endUser.setClient(clientId);
-            em.persist(endUser);
+            create(endUser);
         }
         List<Flag> flags = applicationBean.getFlags(appId);
         flags.forEach(f -> {
@@ -84,7 +98,7 @@ public class EndUserBean {
             rule.setFlag(f);
             rule.setExpirationDate(Timestamp.from(Instant.now().plus(30, ChronoUnit.DAYS)));
             rule.setValue(f.getDefaultValue());
-            em.persist(rule);
+            ruleBean.create(rule);
         });
         return endUser;
     }
@@ -97,5 +111,16 @@ public class EndUserBean {
                 .filter(r -> !r.hasExpired())
                 .map(DtoMapper::toRuleDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<RuleDto> getRule(Long user_id) {
+        List<Rule> rules = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
+                .setParameter("clientId", user_id)
+                .getResultList();
+
+        if (rules.isEmpty()) {
+            return null;
+        }
+        return DtoMapper.toRulesDto(rules);
     }
 }

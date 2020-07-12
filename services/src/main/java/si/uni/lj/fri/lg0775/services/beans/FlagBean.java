@@ -3,6 +3,8 @@ package si.uni.lj.fri.lg0775.services.beans;
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.db.Application;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
+import si.uni.lj.fri.lg0775.entities.enums.RuleType;
+import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,6 +13,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 
 @ApplicationScoped
@@ -20,6 +25,9 @@ public class FlagBean {
 
     @Inject
     private ApplicationBean applicationBean;
+
+    @Inject
+    private RuleBean ruleBean;
 
     // Create
     public void create(Flag e) {
@@ -66,43 +74,45 @@ public class FlagBean {
         }
 
         flagList.forEach(f -> {
-            switch (f.getDataType()) {
-                case BOOL:
-                    Flag flag = new Flag();
-                    flag.setDataType(DataType.BOOL);
-                    flag.setApplication(application);
-                    flag.setDescription(f.getDescription());
-                    flag.setName(f.getName());
-                    flag.setDefaultValue(f.getDefaultValue());
-
-                    em.persist(flag);
-                    break;
-                case INT:
-                    Flag flag2 = new Flag();
-                    flag2.setDataType(DataType.INT);
-                    flag2.setApplication(application);
-                    flag2.setDescription(f.getDescription());
-                    flag2.setName(f.getName());
-                    flag2.setDefaultValue(f.getDefaultValue());
-
-                    em.persist(flag2);
-                    break;
-            }
+            createFlag(f, application);
         });
+    }
+
+    public void createFlag(FlagDto f, Long appId) {
+        Application application = applicationBean.getApplication(appId);
+        if (application == null) {
+            throw new NotFoundException("Application not found");
+        }
+        createFlag(f, application);
     }
 
     // Ustvari zastavico, ki jo doda aplikaciji
     @Transactional
-    public void createFlag(FlagDto f, Long appId) {
-        Application application = applicationBean.getApplication(appId);
+    public void createFlag(FlagDto f, Application application) {
         Flag flag = new Flag();
+        switch (f.getDataType()) {
+            case BOOL:
+                flag.setDataType(DataType.BOOL);
+                flag.setApplication(application);
+                flag.setDescription(f.getDescription());
+                flag.setName(f.getName());
+                flag.setDefaultValue(f.getDefaultValue());
+                break;
+            case INT:
+                flag.setDataType(DataType.INT);
+                flag.setApplication(application);
+                flag.setDescription(f.getDescription());
+                flag.setName(f.getName());
+                flag.setDefaultValue(f.getDefaultValue());
+                break;
+        }
+        create(flag);
 
-        flag.setApplication(application);
-        flag.setDataType(f.getDataType());
-        flag.setDefaultValue(f.getDefaultValue());
-        flag.setDescription(f.getDescription());
-        flag.setName(f.getName());
-
-        em.persist(flag);
+        CreateRuleDto crd = new CreateRuleDto();
+        crd.setDataType(flag.getDataType());
+        crd.setExpirationDate(Instant.now().plus(45, ChronoUnit.DAYS));
+        crd.setRuleType(RuleType.SAME_FOR_EVERYONE);
+        crd.setValue(flag.getDefaultValue());
+        ruleBean.createRule(crd, application.getId(), flag.getId());
     }
 }
