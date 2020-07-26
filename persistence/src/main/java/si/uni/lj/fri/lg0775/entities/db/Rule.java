@@ -24,6 +24,14 @@ import java.time.Instant;
         @NamedQuery(
                 name = "Rule.getRuleForUser",
                 query = "SELECT r FROM Rule r" +
+                        " WHERE r.endUser.client = :clientId" +
+                        " AND r.deleted = false" +
+                        " AND r.expirationDate > CURRENT_TIMESTAMP" +
+                        " ORDER BY r.createdAt DESC"
+        ),
+        @NamedQuery(
+                name = "Rule.getRuleForUserById",
+                query = "SELECT r FROM Rule r" +
                         " WHERE r.endUser.id = :clientId" +
                         " AND r.deleted = false" +
                         " AND r.expirationDate > CURRENT_TIMESTAMP" +

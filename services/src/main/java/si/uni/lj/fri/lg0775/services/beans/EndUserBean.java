@@ -67,7 +67,7 @@ public class EndUserBean {
         return em.contains(id);
     }
 
-    public EndUser getEndUser(String id) {
+    public EndUser getEndUser(Long id) {
         return em.find(EndUser.class, id);
     }
 
@@ -114,7 +114,7 @@ public class EndUserBean {
     }
 
     public List<RuleDto> getRule(Long user_id) {
-        List<Rule> rules = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
+        List<Rule> rules = em.createNamedQuery("Rule.getRuleForUserById", Rule.class)
                 .setParameter("clientId", user_id)
                 .getResultList();
 

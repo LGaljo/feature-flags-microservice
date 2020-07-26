@@ -6,37 +6,34 @@ import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 import java.time.Instant;
 
 public class CreateRuleDto {
-    private Long flagId;
+    private long flagId;
     private RuleType ruleType;
     private DataType dataType;
     private Instant expirationDate;
     private int value;
     private int valueB;
-    private String name;
-    private String description;
     private int shareOfA;
+    private Long user;
 
     public CreateRuleDto() {
     }
 
-    public CreateRuleDto(Long flagId, RuleType ruleType, DataType dataType, Instant expirationDate,
-                         int value, int valueB, String name, String description, int shareOfA) {
+    public CreateRuleDto(long flagId, RuleType ruleType, DataType dataType, Instant expirationDate,
+                         int value, int valueB, String description, int shareOfA) {
         this.flagId = flagId;
         this.ruleType = ruleType;
         this.dataType = dataType;
         this.expirationDate = expirationDate;
         this.value = value;
         this.valueB = valueB;
-        this.name = name;
-        this.description = description;
         this.shareOfA = shareOfA;
     }
 
-    public Long getFlagId() {
+    public long getFlagId() {
         return flagId;
     }
 
-    public void setFlagId(Long flagId) {
+    public void setFlagId(long flagId) {
         this.flagId = flagId;
     }
 
@@ -80,28 +77,20 @@ public class CreateRuleDto {
         this.valueB = valueB;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getShareOfA() {
         return shareOfA;
     }
 
     public void setShareOfA(int shareOfA) {
         this.shareOfA = shareOfA;
+    }
+
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long users) {
+        this.user = users;
     }
 
     @Override
@@ -113,9 +102,8 @@ public class CreateRuleDto {
                 ", expirationDate=" + expirationDate +
                 ", value=" + value +
                 ", valueB=" + valueB +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
                 ", shareOfA=" + shareOfA +
+                ", user=" + user +
                 '}';
     }
 }
