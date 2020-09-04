@@ -1,8 +1,8 @@
 package si.uni.lj.fri.lg0775.services.beans;
 
-import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.db.Application;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
+import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
@@ -15,7 +15,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
 import java.util.List;
 
 @ApplicationScoped

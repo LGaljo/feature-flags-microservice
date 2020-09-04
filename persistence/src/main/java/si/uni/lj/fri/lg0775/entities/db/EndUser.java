@@ -16,6 +16,13 @@ import java.io.Serializable;
                 name = "EndUser.getByClientID",
                 query = "SELECT u FROM EndUser u WHERE u.client = :clientId"
         ),
+        // Get users by application id
+        @NamedQuery(
+                name = "EndUser.getEndUsersByAppID",
+                query = "SELECT u FROM EndUser u" +
+                        " WHERE u.deleted = false" +
+                        " AND u.application.id = :applicationId"
+        ),
 })
 public class EndUser extends BaseEntity implements Serializable {
     @Basic

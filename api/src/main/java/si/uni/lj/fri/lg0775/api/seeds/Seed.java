@@ -1,7 +1,7 @@
 package si.uni.lj.fri.lg0775.api.seeds;
 
-import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.db.Application;
+import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.services.beans.ApplicationBean;
 import si.uni.lj.fri.lg0775.services.beans.EndUserBean;
 import si.uni.lj.fri.lg0775.services.beans.FlagBean;

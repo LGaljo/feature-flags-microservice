@@ -1,5 +1,6 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
+import si.uni.lj.fri.lg0775.services.beans.ApplicationBean;
 import si.uni.lj.fri.lg0775.services.beans.EndUserBean;
 
 import javax.enterprise.context.RequestScoped;
@@ -16,6 +17,9 @@ public class EndUserResource {
     @Inject
     private EndUserBean endUserBean;
 
+    @Inject
+    private ApplicationBean applicationBean;
+
     @POST
     public Response heartbeat(
             @QueryParam("client_id") String clientId,
@@ -28,22 +32,10 @@ public class EndUserResource {
     }
 
     @GET
-    public Response getRulesForAppByClientID(
-            @QueryParam("client_id") String clientId
-    ) {
+    public Response getUsers(@QueryParam("app_id") Long appId) {
         return Response
-                .status(Response.Status.OK)
-                .entity(endUserBean.getRulesForApp(clientId))
-                .build();
-    }
-
-    @GET
-    @Path("{id}")
-    public Response getRulesForAppByUserID(
-            @PathParam("id") Long user_id
-    ) {
-        return Response
-                .ok(endUserBean.getRule(user_id))
+                .ok()
+                .entity(applicationBean.getUsers(appId))
                 .build();
     }
 }

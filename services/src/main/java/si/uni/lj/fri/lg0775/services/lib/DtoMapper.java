@@ -7,7 +7,6 @@ import si.uni.lj.fri.lg0775.services.dtos.EndUserDto;
 import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
 import si.uni.lj.fri.lg0775.services.dtos.RuleDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,9 @@ public class DtoMapper {
                 f.getName(),
                 f.getDescription(),
                 f.getDataType(),
-                r.getValue()
+                r.getValue(),
+                r.getEndUser().getClient(),
+                r.getExpirationDate().toInstant()
         );
     }
 

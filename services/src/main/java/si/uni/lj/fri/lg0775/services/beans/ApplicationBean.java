@@ -94,7 +94,7 @@ public class ApplicationBean {
                 .collect(Collectors.toList());
     }
 
-    // Pridobi vse uporabnike te aplikacije
+    // Pridobi vse uporabnike te aplikacije in vrni DTO
     public List<EndUserDto> getUsers(Long appId) {
         if (em.find(Application.class, appId) == null) {
             throw new NotFoundException("Application not found");
@@ -105,13 +105,14 @@ public class ApplicationBean {
                 .collect(Collectors.toList());
     }
 
+    // Pridobi vse uporabnike te aplikacije
     public List<EndUser> getUsersOfApp(Long appId) {
-        return em.createNamedQuery("Application.getEndUsers", EndUser.class)
+        return em.createNamedQuery("EndUser.getEndUsersByAppID", EndUser.class)
                 .setParameter("applicationId", appId)
                 .getResultList();
     }
 
-    // Ustvari novo aplikacijo, na začetku vsebuje prazen seznam zastavic
+    // Ustvari novo aplikacijo, ki na začetku vsebuje prazen seznam zastavic
     @Transactional
     public Application createApp(String appName) {
         Application application = new Application();

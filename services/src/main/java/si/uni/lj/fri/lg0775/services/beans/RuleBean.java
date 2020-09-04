@@ -4,13 +4,13 @@ import si.uni.lj.fri.lg0775.entities.db.Application;
 import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.db.Rule;
+import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 import si.uni.lj.fri.lg0775.services.dtos.RuleDto;
 import si.uni.lj.fri.lg0775.services.exceptions.InvalidDataException;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class RuleBean {
@@ -178,7 +179,11 @@ public class RuleBean {
             if (rand_int < crd.getShareOfA()) {
                 rule.setValue(crd.getValue());
             } else {
-                rule.setValue(crd.getValueB());
+                if (crd.getDataType() == DataType.BOOL) {
+                    rule.setValue(Math.abs(crd.getValue() - 1));
+                } else {
+                    rule.setValue(crd.getValueB());
+                }
             }
 
             // Persist
@@ -188,5 +193,32 @@ public class RuleBean {
                 update(rule);
             }
         });
+    }
+
+    public List<RuleDto> getRulesForFlag(long flag_id) {
+        return DtoMapper.toRulesDto(em.createNamedQuery("Rule.getRulesForFlag", Rule.class)
+                .setParameter("flagId", flag_id)
+                .getResultList());
+    }
+
+    public List<RuleDto> getRulesForApp(String clientId) {
+        return em.createNamedQuery("Rule.getRulesForApp", Rule.class)
+                .setParameter("clientId", clientId)
+                .getResultList()
+                .stream()
+                .filter(r -> !r.hasExpired())
+                .map(DtoMapper::toRuleDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<RuleDto> getRulesForUserID(Long user_id) {
+        List<Rule> rules = em.createNamedQuery("Rule.getRuleForUserById", Rule.class)
+                .setParameter("clientId", user_id)
+                .getResultList();
+
+        if (rules.isEmpty()) {
+            return null;
+        }
+        return DtoMapper.toRulesDto(rules);
     }
 }

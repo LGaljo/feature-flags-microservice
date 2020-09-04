@@ -4,7 +4,6 @@ import si.uni.lj.fri.lg0775.entities.db.base.BaseEntity;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 

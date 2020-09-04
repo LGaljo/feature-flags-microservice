@@ -4,8 +4,6 @@ import si.uni.lj.fri.lg0775.entities.db.Application;
 import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.db.Rule;
-import si.uni.lj.fri.lg0775.services.dtos.RuleDto;
-import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,7 +15,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class EndUserBean {
@@ -101,26 +98,5 @@ public class EndUserBean {
             ruleBean.create(rule);
         });
         return endUser;
-    }
-
-    public List<RuleDto> getRulesForApp(String clientId) {
-        return em.createNamedQuery("Rule.getRulesForApp", Rule.class)
-                .setParameter("clientId", clientId)
-                .getResultList()
-                .stream()
-                .filter(r -> !r.hasExpired())
-                .map(DtoMapper::toRuleDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<RuleDto> getRule(Long user_id) {
-        List<Rule> rules = em.createNamedQuery("Rule.getRuleForUserById", Rule.class)
-                .setParameter("clientId", user_id)
-                .getResultList();
-
-        if (rules.isEmpty()) {
-            return null;
-        }
-        return DtoMapper.toRulesDto(rules);
     }
 }

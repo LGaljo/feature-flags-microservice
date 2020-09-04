@@ -22,6 +22,12 @@ import java.time.Instant;
                         " AND r.expirationDate > CURRENT_TIMESTAMP"
         ),
         @NamedQuery(
+                name = "Rule.getRulesForFlag",
+                query = "SELECT r FROM Rule r" +
+                        " WHERE r.flag.id = :flagId" +
+                        " AND r.deleted = false"
+        ),
+        @NamedQuery(
                 name = "Rule.getRuleForUser",
                 query = "SELECT r FROM Rule r" +
                         " WHERE r.endUser.client = :clientId" +

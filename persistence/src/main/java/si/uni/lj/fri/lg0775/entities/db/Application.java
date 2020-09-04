@@ -16,13 +16,6 @@ import java.util.List;
                 name = "Application.findAllExceptDeleted",
                 query = "SELECT a FROM Application a WHERE a.deleted = false"
         ),
-        // Get users of this application
-        @NamedQuery(
-                name = "Application.getEndUsers",
-                query = "SELECT u FROM EndUser u" +
-                        " WHERE u.deleted = false" +
-                        " AND u.application.id = :applicationId"
-        ),
 })
 /*
     Aplikacija je objekt, ki shrani njeno ime
