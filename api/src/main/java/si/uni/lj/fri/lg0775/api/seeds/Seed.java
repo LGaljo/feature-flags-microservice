@@ -28,6 +28,7 @@ public class Seed {
         // Create apps
         Application app1 = applicationBean.createApp("instapid");
         Application app2 = applicationBean.createApp("bikebook");
+        Application demoApp = applicationBean.createApp("featureflagsdemo");
 
         // Create flags
         FlagDto flagDto1 = new FlagDto();
@@ -58,12 +59,36 @@ public class Seed {
         flagDto4.setDescription("Forth flag");
         flagBean.createFlag(flagDto4, app2);
 
+        FlagDto flagDtoDemo1 = new FlagDto();
+        flagDtoDemo1.setDataType(DataType.BOOL);
+        flagDtoDemo1.setDefaultValue(0);
+        flagDtoDemo1.setName("ui_type");
+        flagDtoDemo1.setDescription("Controls which view is shown. Linear or grid type of list.");
+        flagBean.createFlag(flagDtoDemo1, demoApp);
+
+        FlagDto flagDtoDemo2 = new FlagDto();
+        flagDtoDemo2.setDataType(DataType.BOOL);
+        flagDtoDemo2.setDefaultValue(1);
+        flagDtoDemo2.setName("plus_content");
+        flagDtoDemo2.setDescription("Only specific users are allowed to view plus page.");
+        flagBean.createFlag(flagDtoDemo2, demoApp);
+
+        FlagDto flagDtoDemo3 = new FlagDto();
+        flagDtoDemo3.setDataType(DataType.BOOL);
+        flagDtoDemo3.setDefaultValue(0);
+        flagDtoDemo3.setName("future_content");
+        flagDtoDemo3.setDescription("Currently unused feature flag.");
+        flagBean.createFlag(flagDtoDemo3, demoApp);
+
         // Create EndUsers
         for (int i = 0; i < 100; i++) {
-            endUserBean.saveEndUser(UUID.randomUUID().toString(), app1.getId());
+            endUserBean.saveEndUser(UUID.randomUUID().toString(), app1);
         }
         for (int i = 0; i < 100; i++) {
-            endUserBean.saveEndUser(UUID.randomUUID().toString(), app2.getId());
+            endUserBean.saveEndUser(UUID.randomUUID().toString(), app2);
+        }
+        for (int i = 0; i < 10; i++) {
+            endUserBean.saveEndUser(UUID.randomUUID().toString(), demoApp);
         }
     }
 }

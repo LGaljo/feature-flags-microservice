@@ -22,8 +22,8 @@ public class RuleResource {
 
     @POST
     public Response create(
-            @QueryParam("flagId") long flag_id,
-            @QueryParam("appId") long app_id,
+            @QueryParam("flag_id") long flag_id,
+            @QueryParam("app_id") long app_id,
             CreateRuleDto crd
     ) {
         return Response
@@ -33,12 +33,13 @@ public class RuleResource {
 
     @GET
     @Path("flag")
-    public Response getRulesForFlag(@QueryParam("flagId") long flag_id) {
-        return Response.ok(ruleBean.getRulesForFlag(flag_id)).build();
+    public Response getRulesForFlag(@QueryParam("flag_id") long flag_id) {
+        return Response
+                .ok(ruleBean.getRulesDtoForFlag(flag_id))
+                .build();
     }
 
     @GET
-    @Path("app")
     public Response getRulesForAppByClientID(@QueryParam("client_id") String clientId) {
         return Response
                 .status(Response.Status.OK)
@@ -47,10 +48,19 @@ public class RuleResource {
     }
 
     @GET
-    @Path("{id}")
-    public Response getRulesForAppByUserID(@PathParam("id") Long user_id) {
+    @Path("{user_id}")
+    public Response getRulesForAppByUserID(@PathParam("user_id") Long user_id) {
         return Response
                 .ok(ruleBean.getRulesForUserID(user_id))
+                .build();
+    }
+
+    @DELETE
+    public Response delete(@QueryParam("app_id") Long id) {
+        ruleBean.markDeleted(ruleBean.find(id));
+
+        return Response
+                .status(Response.Status.OK)
                 .build();
     }
 }

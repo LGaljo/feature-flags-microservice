@@ -6,6 +6,7 @@ import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
+import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,10 +17,11 @@ import javax.ws.rs.NotFoundException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class FlagBean {
-    @PersistenceContext(name="feature-flags")
+    @PersistenceContext(name = "feature-flags")
     private EntityManager em;
 
     @Inject
@@ -62,6 +64,27 @@ public class FlagBean {
     // Contains
     public boolean contains(Long id) {
         return em.contains(id);
+    }
+
+
+    // Pridobi vse zastavice za aplikacijo, ki niso izbrisane
+    public List<Flag> getFlagsForApp(Long appId) {
+        applicationBean.getApplication(appId);
+        return em.createNamedQuery("Flag.getFlagsForApplication", Flag.class)
+                .setParameter("applicationId", appId)
+                .getResultList();
+    }
+
+    // Pridobi vse zastavice za aplikacijo, ki niso izbrisane
+    public List<FlagDto> getFlagsDto(Long appId) {
+        applicationBean.getApplication(appId);
+
+        return em.createNamedQuery("Flag.getFlagsForApplication", Flag.class)
+                .setParameter("applicationId", appId)
+                .getResultList()
+                .stream()
+                .map(DtoMapper::toFlagDto)
+                .collect(Collectors.toList());
     }
 
     // Aplikaciji doda seznam zastavic
@@ -113,5 +136,16 @@ public class FlagBean {
         crd.setRuleType(RuleType.SAME_FOR_EVERYONE);
         crd.setValue(flag.getDefaultValue());
         ruleBean.createRule(crd, application.getId(), flag.getId());
+    }
+
+    // Also remove rules
+    public void removeFlag(Long id) {
+        ruleBean.removeRulesForFlag(id);
+        markDeleted(find(id));
+    }
+
+    public void removeFlagsForApp(Long app_id) {
+        List<Flag> flags = getFlagsForApp(app_id);
+        flags.forEach(flag -> removeFlag(flag.getId()));
     }
 }

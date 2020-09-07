@@ -1,5 +1,5 @@
 kumuluzee:
-  name: lokacijski-opomniki-jpa
+  name: feature-flags-backend
   version: 1.0.0
   server:
     http:

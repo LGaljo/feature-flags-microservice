@@ -4,6 +4,8 @@ import si.uni.lj.fri.lg0775.entities.db.Application;
 import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.db.Rule;
+import si.uni.lj.fri.lg0775.services.dtos.EndUserDto;
+import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -11,10 +13,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class EndUserBean {
@@ -27,6 +31,9 @@ public class EndUserBean {
 
     @Inject
     private RuleBean ruleBean;
+
+    @Inject
+    private FlagBean flagBean;
 
     // Create
     public void create(EndUser e) {
@@ -69,25 +76,43 @@ public class EndUserBean {
     }
 
     @Transactional
-    public EndUser heartbeat(String clientId, Long appId) {
+    public EndUser heartbeat(String clientId, String appName) {
         try {
             return em.createNamedQuery("EndUser.getByClientID", EndUser.class)
                     .setParameter("clientId", clientId).getSingleResult();
         } catch (NoResultException nre) {
-            return saveEndUser(clientId, appId);
+            return saveEndUser(clientId, appName);
         }
     }
 
+    // Pridobi vse uporabnike te aplikacije in vrni DTO
+    public List<EndUserDto> getUsers(Long appId) {
+        if (em.find(Application.class, appId) == null) {
+            throw new NotFoundException("Application not found");
+        }
+        return getUsersOfApp(appId)
+                .stream()
+                .map(DtoMapper::toEndUserDto)
+                .collect(Collectors.toList());
+    }
+
+    // Pridobi vse uporabnike te aplikacije
+    public List<EndUser> getUsersOfApp(Long appId) {
+        return em.createNamedQuery("EndUser.getEndUsersByAppID", EndUser.class)
+                .setParameter("applicationId", appId)
+                .getResultList();
+    }
+
     @Transactional
-    public EndUser saveEndUser(String clientId, Long appId) {
+    public EndUser saveEndUser(String clientId, Application application) {
         EndUser endUser = new EndUser();
-        Application application = applicationBean.getApplication(appId);
-        if (clientId != null && application != null) {
+        if (clientId != null) {
             endUser.setApplication(application);
             endUser.setClient(clientId);
             create(endUser);
         }
-        List<Flag> flags = applicationBean.getFlags(appId);
+
+        List<Flag> flags = flagBean.getFlagsForApp(application.getId());
         flags.forEach(f -> {
             Rule rule = new Rule();
             rule.setApplication(application);
@@ -97,6 +122,17 @@ public class EndUserBean {
             rule.setValue(f.getDefaultValue());
             ruleBean.create(rule);
         });
+
         return endUser;
+    }
+
+    public EndUser saveEndUser(String clientId, String appName) {
+        Application application = applicationBean.getApplicationByName(appName);
+
+        if (application == null) {
+            throw new NotFoundException("Application not found");
+        }
+
+        return saveEndUser(clientId, application);
     }
 }

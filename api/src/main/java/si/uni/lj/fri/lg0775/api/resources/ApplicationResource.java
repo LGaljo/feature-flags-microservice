@@ -7,7 +7,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
 @RequestScoped
@@ -41,6 +40,15 @@ public class ApplicationResource {
         return Response
                 .status(Response.Status.CREATED)
                 .entity(applicationBean.createApp(name.getName()))
+                .build();
+    }
+
+    @DELETE
+    public Response delete(@QueryParam("app_id") Long id) {
+        applicationBean.removeApp(id);
+
+        return Response
+                .status(Response.Status.OK)
                 .build();
     }
 }

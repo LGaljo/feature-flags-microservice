@@ -128,7 +128,7 @@ public class RuleBean {
 
     private void createRuleForEveryone(CreateRuleDto crd, Application application, Flag flag) {
         // Get all users of that app
-        List<EndUser> users = applicationBean.getUsersOfApp(application.getId());
+        List<EndUser> users = endUserBean.getUsersOfApp(application.getId());
 
         // Create array of rules for these users
         users.forEach(endUser -> {
@@ -136,6 +136,7 @@ public class RuleBean {
             try {
                 rule = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
                         .setParameter("clientId", endUser.getClient())
+                        .setParameter("flagId", flag.getId())
                         .getSingleResult();
             } catch (NoResultException nre) {
                 rule = new Rule();
@@ -158,7 +159,7 @@ public class RuleBean {
 
     private void createABTestingRule(CreateRuleDto crd, Application application, Flag flag) {
         // Get all users of that app
-        List<EndUser> users = applicationBean.getUsersOfApp(application.getId());
+        List<EndUser> users = endUserBean.getUsersOfApp(application.getId());
         Random rand = new Random();
 
         users.forEach(endUser -> {
@@ -195,10 +196,14 @@ public class RuleBean {
         });
     }
 
-    public List<RuleDto> getRulesForFlag(long flag_id) {
-        return DtoMapper.toRulesDto(em.createNamedQuery("Rule.getRulesForFlag", Rule.class)
+    public List<Rule> getRulesForFlag(long flag_id) {
+        return em.createNamedQuery("Rule.getRulesForFlag", Rule.class)
                 .setParameter("flagId", flag_id)
-                .getResultList());
+                .getResultList();
+    }
+
+    public List<RuleDto> getRulesDtoForFlag(long flag_id) {
+        return DtoMapper.toRulesDto(getRulesForFlag(flag_id));
     }
 
     public List<RuleDto> getRulesForApp(String clientId) {
@@ -220,5 +225,10 @@ public class RuleBean {
             return null;
         }
         return DtoMapper.toRulesDto(rules);
+    }
+
+    public void removeRulesForFlag(Long flag_id) {
+        List<Rule> rules = getRulesForFlag(flag_id);
+        rules.forEach(this::markDeleted);
     }
 }

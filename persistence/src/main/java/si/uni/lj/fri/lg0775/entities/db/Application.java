@@ -16,10 +16,11 @@ import java.util.List;
                 name = "Application.findAllExceptDeleted",
                 query = "SELECT a FROM Application a WHERE a.deleted = false"
         ),
+        @NamedQuery(
+                name = "Application.getAppByName",
+                query = "SELECT a FROM Application a WHERE a.name = :applicationName"
+        ),
 })
-/*
-    Aplikacija je objekt, ki shrani njeno ime
- */
 public class Application extends BaseEntity implements Serializable {
     @Basic
     @NotNull
