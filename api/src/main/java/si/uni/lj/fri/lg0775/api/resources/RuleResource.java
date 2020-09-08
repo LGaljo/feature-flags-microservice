@@ -2,6 +2,7 @@ package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.RuleBean;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
+import si.uni.lj.fri.lg0775.services.dtos.IdDto;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -51,16 +52,7 @@ public class RuleResource {
     @Path("{user_id}")
     public Response getRulesForAppByUserID(@PathParam("user_id") Long user_id) {
         return Response
-                .ok(ruleBean.getRulesForUserID(user_id))
-                .build();
-    }
-
-    @DELETE
-    public Response delete(@QueryParam("app_id") Long id) {
-        ruleBean.markDeleted(ruleBean.find(id));
-
-        return Response
-                .status(Response.Status.OK)
+                .ok(ruleBean.getRulesDtoForUserID(user_id))
                 .build();
     }
 }

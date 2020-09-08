@@ -6,7 +6,6 @@ import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 import java.time.Instant;
 
 public class CreateRuleDto {
-    private long flagId;
     private RuleType ruleType;
     private DataType dataType;
     private Instant expirationDate;
@@ -18,23 +17,14 @@ public class CreateRuleDto {
     public CreateRuleDto() {
     }
 
-    public CreateRuleDto(long flagId, RuleType ruleType, DataType dataType, Instant expirationDate,
-                         int value, int valueB, String description, int shareOfA) {
-        this.flagId = flagId;
+    public CreateRuleDto(RuleType ruleType, DataType dataType, Instant expirationDate,
+                         int value, int valueB, int shareOfA) {
         this.ruleType = ruleType;
         this.dataType = dataType;
         this.expirationDate = expirationDate;
         this.value = value;
         this.valueB = valueB;
         this.shareOfA = shareOfA;
-    }
-
-    public long getFlagId() {
-        return flagId;
-    }
-
-    public void setFlagId(long flagId) {
-        this.flagId = flagId;
     }
 
     public RuleType getRuleType() {
@@ -96,8 +86,7 @@ public class CreateRuleDto {
     @Override
     public String toString() {
         return "CreateRuleDto{" +
-                "flagId=" + flagId +
-                ", ruleType=" + ruleType +
+                "ruleType=" + ruleType +
                 ", dataType=" + dataType +
                 ", expirationDate=" + expirationDate +
                 ", value=" + value +

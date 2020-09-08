@@ -58,15 +58,6 @@ public class ApplicationBean {
         return em.contains(id);
     }
 
-    // Pridobi objekt aplikacije
-    public Application getApplication(Long id) {
-        Application application;
-        if ((application = em.find(Application.class, id)) == null) {
-            throw new NotFoundException("Application not found");
-        }
-        return application;
-    }
-
     // Pridobi vse aplikacije
     public List<Application> getAll() {
         return em.createNamedQuery("Application.findAllExceptDeleted", Application.class).getResultList();
@@ -90,6 +81,7 @@ public class ApplicationBean {
                 .getSingleResult();
     }
 
+    @Transactional
     public void removeApp(Long id) {
         markDeleted(find(id));
         flagBean.removeFlagsForApp(id);

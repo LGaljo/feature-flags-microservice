@@ -18,8 +18,7 @@ import java.time.Instant;
                 name = "Rule.getRulesForApp",
                 query = "SELECT r FROM Rule r" +
                         " WHERE r.endUser.client = :clientId" +
-                        " AND r.deleted = false" +
-                        " AND r.expirationDate > CURRENT_TIMESTAMP"
+                        " AND r.deleted = false"
         ),
         @NamedQuery(
                 name = "Rule.getRulesForFlag",
@@ -31,9 +30,7 @@ import java.time.Instant;
                 name = "Rule.getRuleForUser",
                 query = "SELECT r FROM Rule r" +
                         " WHERE r.endUser.client = :clientId" +
-                        " AND r.flag.id = :flagId" +
                         " AND r.deleted = false" +
-                        " AND r.expirationDate > CURRENT_TIMESTAMP" +
                         " ORDER BY r.createdAt DESC"
         ),
         @NamedQuery(
@@ -41,7 +38,6 @@ import java.time.Instant;
                 query = "SELECT r FROM Rule r" +
                         " WHERE r.endUser.id = :clientId" +
                         " AND r.deleted = false" +
-                        " AND r.expirationDate > CURRENT_TIMESTAMP" +
                         " ORDER BY r.createdAt DESC"
         ),
 })

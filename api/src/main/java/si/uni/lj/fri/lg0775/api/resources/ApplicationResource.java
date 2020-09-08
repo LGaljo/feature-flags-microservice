@@ -1,6 +1,7 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.ApplicationBean;
+import si.uni.lj.fri.lg0775.services.dtos.IdDto;
 import si.uni.lj.fri.lg0775.services.dtos.NewAppDto;
 
 import javax.enterprise.context.RequestScoped;
@@ -17,6 +18,14 @@ public class ApplicationResource {
     @Inject
     private ApplicationBean applicationBean;
 
+    @POST
+    public Response create(NewAppDto name) {
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(applicationBean.createApp(name.getName()))
+                .build();
+    }
+
     @GET
     public Response getAll() {
         return Response
@@ -27,28 +36,20 @@ public class ApplicationResource {
 
     @GET
     @Path("{id}")
-    public Response get(@PathParam("id") String id) {
-        Long lid = Long.decode(id);
+    public Response get(@PathParam("id") Long id) {
         return Response
                 .ok()
-                .entity(applicationBean.find(lid))
+                .entity(applicationBean.find(id))
                 .build();
     }
 
     @POST
-    public Response create(NewAppDto name) {
-        return Response
-                .status(Response.Status.CREATED)
-                .entity(applicationBean.createApp(name.getName()))
-                .build();
-    }
-
-    @DELETE
-    public Response delete(@QueryParam("app_id") Long id) {
-        applicationBean.removeApp(id);
+    @Path("delete")
+    public Response delete(IdDto id) {
+        applicationBean.removeApp(id.getId());
 
         return Response
-                .status(Response.Status.OK)
+                .status(Response.Status.ACCEPTED)
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.EndUserBean;
+import si.uni.lj.fri.lg0775.services.dtos.IdDto;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -35,10 +36,10 @@ public class EndUserResource {
                 .build();
     }
 
-    @DELETE
-    public Response delete(@QueryParam("app_id") Long id) {
-        endUserBean.markDeleted(endUserBean.find(id));
-
+    @POST
+    @Path("delete")
+    public Response delete(IdDto id) {
+        endUserBean.removeUser(id);
         return Response
                 .status(Response.Status.OK)
                 .build();

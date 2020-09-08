@@ -2,6 +2,7 @@ package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.FlagBean;
 import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
+import si.uni.lj.fri.lg0775.services.dtos.IdDto;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -22,7 +23,7 @@ public class FlagResource {
     @Path("{id}")
     public Response get(@PathParam("id") Long flag_id) {
         return Response
-                .ok(flagBean.find(flag_id))
+                .ok(flagBean.get(flag_id))
                 .build();
     }
 
@@ -41,12 +42,13 @@ public class FlagResource {
         return Response.status(Response.Status.CREATED).build();
     }
 
-    @DELETE
-    public Response delete(@QueryParam("app_id") Long id) {
-        flagBean.removeFlag(id);
+    @POST
+    @Path("delete")
+    public Response delete(IdDto id) {
+        flagBean.removeFlag(id.getId());
 
         return Response
-                .status(Response.Status.OK)
+                .status(Response.Status.ACCEPTED)
                 .build();
     }
 }

@@ -61,6 +61,14 @@ public class FlagBean {
         return em.find(Flag.class, id);
     }
 
+    public Flag get(Long id) {
+        Flag f = find(id);
+        if (f.isDeleted()) {
+            throw new NotFoundException();
+        }
+        return f;
+    }
+
     // Contains
     public boolean contains(Long id) {
         return em.contains(id);
@@ -69,7 +77,7 @@ public class FlagBean {
 
     // Pridobi vse zastavice za aplikacijo, ki niso izbrisane
     public List<Flag> getFlagsForApp(Long appId) {
-        applicationBean.getApplication(appId);
+        applicationBean.find(appId);
         return em.createNamedQuery("Flag.getFlagsForApplication", Flag.class)
                 .setParameter("applicationId", appId)
                 .getResultList();
@@ -77,7 +85,7 @@ public class FlagBean {
 
     // Pridobi vse zastavice za aplikacijo, ki niso izbrisane
     public List<FlagDto> getFlagsDto(Long appId) {
-        applicationBean.getApplication(appId);
+        applicationBean.find(appId);
 
         return em.createNamedQuery("Flag.getFlagsForApplication", Flag.class)
                 .setParameter("applicationId", appId)
@@ -90,7 +98,7 @@ public class FlagBean {
     // Aplikaciji doda seznam zastavic
     @Transactional
     public void createFlags(List<FlagDto> flagList, Long appId) {
-        Application application = applicationBean.getApplication(appId);
+        Application application = applicationBean.find(appId);
         if (application == null) {
             throw new NotFoundException("Application not found");
         }
@@ -101,7 +109,7 @@ public class FlagBean {
     }
 
     public void createFlag(FlagDto f, Long appId) {
-        Application application = applicationBean.getApplication(appId);
+        Application application = applicationBean.find(appId);
         if (application == null) {
             throw new NotFoundException("Application not found");
         }
@@ -139,6 +147,7 @@ public class FlagBean {
     }
 
     // Also remove rules
+    @Transactional
     public void removeFlag(Long id) {
         ruleBean.removeRulesForFlag(id);
         markDeleted(find(id));

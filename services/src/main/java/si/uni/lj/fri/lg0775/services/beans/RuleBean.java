@@ -136,7 +136,6 @@ public class RuleBean {
             try {
                 rule = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
                         .setParameter("clientId", endUser.getClient())
-                        .setParameter("flagId", flag.getId())
                         .getSingleResult();
             } catch (NoResultException nre) {
                 rule = new Rule();
@@ -158,6 +157,11 @@ public class RuleBean {
     }
 
     private void createABTestingRule(CreateRuleDto crd, Application application, Flag flag) {
+        // Check value of shareOfA
+        if (crd.getShareOfA() <= 0 || crd.getShareOfA() >= 100) {
+            throw new InvalidDataException("Share of group A should be between 0 and 100");
+        }
+
         // Get all users of that app
         List<EndUser> users = endUserBean.getUsersOfApp(application.getId());
         Random rand = new Random();
@@ -216,7 +220,11 @@ public class RuleBean {
                 .collect(Collectors.toList());
     }
 
-    public List<RuleDto> getRulesForUserID(Long user_id) {
+    public List<RuleDto> getRulesDtoForUserID(Long user_id) {
+        return DtoMapper.toRulesDto(getRulesForUserID(user_id));
+    }
+
+    public List<Rule> getRulesForUserID(Long user_id) {
         List<Rule> rules = em.createNamedQuery("Rule.getRuleForUserById", Rule.class)
                 .setParameter("clientId", user_id)
                 .getResultList();
@@ -224,11 +232,18 @@ public class RuleBean {
         if (rules.isEmpty()) {
             return null;
         }
-        return DtoMapper.toRulesDto(rules);
+
+        return rules;
     }
 
+    @Transactional
     public void removeRulesForFlag(Long flag_id) {
         List<Rule> rules = getRulesForFlag(flag_id);
         rules.forEach(this::markDeleted);
+    }
+
+    @Transactional
+    public void removeFlag(Long id) {
+        markDeleted(find(id));
     }
 }
