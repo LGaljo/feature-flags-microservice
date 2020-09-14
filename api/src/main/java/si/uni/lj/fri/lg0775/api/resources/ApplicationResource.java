@@ -1,7 +1,6 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.ApplicationBean;
-import si.uni.lj.fri.lg0775.services.dtos.IdDto;
 import si.uni.lj.fri.lg0775.services.dtos.NewAppDto;
 
 import javax.enterprise.context.RequestScoped;
@@ -43,10 +42,10 @@ public class ApplicationResource {
                 .build();
     }
 
-    @POST
-    @Path("delete")
-    public Response delete(IdDto id) {
-        applicationBean.removeApp(id.getId());
+    @DELETE
+    @Path("/{id}")
+    public Response delete(@PathParam("id") Long id) {
+        applicationBean.removeApp(id);
 
         return Response
                 .status(Response.Status.ACCEPTED)

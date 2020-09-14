@@ -5,7 +5,6 @@ import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.db.Rule;
 import si.uni.lj.fri.lg0775.services.dtos.EndUserDto;
-import si.uni.lj.fri.lg0775.services.dtos.IdDto;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -138,9 +137,9 @@ public class EndUserBean {
     }
 
     @Transactional
-    public void removeUser(IdDto id) {
-        List<Rule> rules = ruleBean.getRulesForUserID(id.getId());
+    public void removeUser(Long id) {
+        List<Rule> rules = ruleBean.getRulesForUserID(id);
         rules.forEach(rule -> ruleBean.markDeleted(rule));
-        markDeleted(find(id.getId()));
+        markDeleted(find(id));
     }
 }

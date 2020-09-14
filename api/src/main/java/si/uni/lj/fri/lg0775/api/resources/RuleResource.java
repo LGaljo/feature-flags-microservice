@@ -2,7 +2,6 @@ package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.RuleBean;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
-import si.uni.lj.fri.lg0775.services.dtos.IdDto;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
