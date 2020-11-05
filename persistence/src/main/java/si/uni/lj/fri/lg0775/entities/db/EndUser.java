@@ -23,6 +23,14 @@ import java.io.Serializable;
                         " WHERE u.deleted = false" +
                         " AND u.application.id = :applicationId"
         ),
+        // Get users by application id, which do not have specific value of flag
+        @NamedQuery(
+                name = "EndUser.getUsersIfAppWONewValue",
+                query = "SELECT r FROM Rule r" +
+                        " WHERE r.application.id = :applicationId" +
+                        " AND r.flag.id = :flagId" +
+                        " AND r.value <> :newValue"
+        ),
 })
 public class EndUser extends BaseEntity implements Serializable {
     @Basic

@@ -1,14 +1,13 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.FlagBean;
-import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
+import si.uni.lj.fri.lg0775.services.dtos.CreateFlagDto;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
@@ -19,14 +18,14 @@ public class FlagResource {
     private FlagBean flagBean;
 
     @GET
-    @Path("{id}")
-    public Response get(@PathParam("id") Long flag_id) {
+    public Response getFlag(@QueryParam("id") Long flag_id) {
         return Response
                 .ok(flagBean.get(flag_id))
                 .build();
     }
 
     @GET
+    @Path("app")
     public Response getFlagsForApp(@QueryParam("app_id") Long appId) {
         return Response
                 .ok()
@@ -35,15 +34,13 @@ public class FlagResource {
     }
 
     @POST
-    @Path("{app_id}")
-    public Response create(List<FlagDto> flagList, @PathParam("app_id") Long appId) {
-        flagBean.createFlags(flagList, appId);
+    public Response create(CreateFlagDto data) {
+        flagBean.createFlags(data.getFlags(), data.getAppId());
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
-    @Path("/{id}")
-    public Response delete(@PathParam("id") Long id) {
+    public Response delete(@QueryParam("id") Long id) {
         flagBean.removeFlag(id);
 
         return Response

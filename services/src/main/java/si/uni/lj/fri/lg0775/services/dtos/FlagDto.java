@@ -9,7 +9,6 @@ public class FlagDto {
     private String description;
     private DataType dataType;
 
-
     public FlagDto() {
     }
 

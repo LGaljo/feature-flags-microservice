@@ -17,6 +17,7 @@ import javax.ws.rs.NotFoundException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,6 +101,14 @@ public class EndUserBean {
     public List<EndUser> getUsersOfApp(Long appId) {
         return em.createNamedQuery("EndUser.getEndUsersByAppID", EndUser.class)
                 .setParameter("applicationId", appId)
+                .getResultList();
+    }
+
+    public List<Rule> getUsersIfAppWONewValue(Long appId, Long flagId, int newValue) {
+        return em.createNamedQuery("EndUser.getUsersIfAppWONewValue", Rule.class)
+                .setParameter("applicationId", appId)
+                .setParameter("flagId", flagId)
+                .setParameter("newValue", newValue)
                 .getResultList();
     }
 

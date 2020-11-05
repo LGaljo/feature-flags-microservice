@@ -40,6 +40,14 @@ public class Flag extends BaseEntity implements Serializable {
     @JoinColumn(name = "application_id")
     private Application application;
 
+    public Flag(@NotNull int defaultValue, @NotNull String name, String description, @NotNull DataType dataType, Application application) {
+        this.defaultValue = defaultValue;
+        this.name = name;
+        this.description = description;
+        this.dataType = dataType;
+        this.application = application;
+    }
+
     public Flag() {
     }
 

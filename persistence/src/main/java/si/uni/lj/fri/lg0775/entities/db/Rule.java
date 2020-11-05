@@ -30,6 +30,7 @@ import java.time.Instant;
                 name = "Rule.getRuleForUser",
                 query = "SELECT r FROM Rule r" +
                         " WHERE r.endUser.client = :clientId" +
+                        " AND r.flag.id = :flagId" +
                         " AND r.deleted = false" +
                         " ORDER BY r.createdAt DESC"
         ),

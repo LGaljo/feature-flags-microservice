@@ -8,9 +8,10 @@
         <jta-data-source>jdbc/feature-flags</jta-data-source>
 
         <class>si.uni.lj.fri.lg0775.entities.db.Application</class>
-        <class>si.uni.lj.fri.lg0775.entities.db.Flag</class>
         <class>si.uni.lj.fri.lg0775.entities.db.EndUser</class>
+        <class>si.uni.lj.fri.lg0775.entities.db.Flag</class>
         <class>si.uni.lj.fri.lg0775.entities.db.Rule</class>
+        <class>si.uni.lj.fri.lg0775.entities.db.ScheduledRollout</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

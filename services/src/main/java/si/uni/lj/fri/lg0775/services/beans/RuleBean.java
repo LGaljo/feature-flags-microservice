@@ -5,6 +5,7 @@ import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.db.Rule;
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
+import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 import si.uni.lj.fri.lg0775.services.dtos.RuleDto;
 import si.uni.lj.fri.lg0775.services.exceptions.InvalidDataException;
@@ -38,13 +39,18 @@ public class RuleBean {
     @Inject
     private FlagBean flagBean;
 
+    @Inject
+    private RolloutWorkerBean rolloutWorkerBean;
+
     // Create
+    @Transactional
     public void create(Rule e) {
         em.persist(e);
         em.flush();
     }
 
     // Update
+    @Transactional
     public void update(Rule e) {
         em.merge(e);
         em.flush();
@@ -72,6 +78,13 @@ public class RuleBean {
     // Contains
     public boolean contains(Long id) {
         return em.contains(id);
+    }
+
+    public Rule getRuleForUser(EndUser endUser, Flag flag) {
+        return em.createNamedQuery("Rule.getRuleForUser", Rule.class)
+                .setParameter("clientId", endUser.getClient())
+                .setParameter("flagId", flag.getId())
+                .getSingleResult();
     }
 
     @Transactional
@@ -103,7 +116,7 @@ public class RuleBean {
             throw new InvalidDataException("No users selected");
         }
         EndUser endUser = endUserBean.find(crd.getUser());
-        Rule rule = null;
+        Rule rule;
         try {
             rule = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
                     .setParameter("clientId", endUser.getClient())
@@ -132,7 +145,7 @@ public class RuleBean {
 
         // Create array of rules for these users
         users.forEach(endUser -> {
-            Rule rule = null;
+            Rule rule;
             try {
                 rule = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
                         .setParameter("clientId", endUser.getClient())
@@ -167,11 +180,9 @@ public class RuleBean {
         Random rand = new Random();
 
         users.forEach(endUser -> {
-            Rule rule = null;
+            Rule rule;
             try {
-                rule = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
-                        .setParameter("clientId", endUser.getClient())
-                        .getSingleResult();
+                rule = getRuleForUser(endUser, flag);
             } catch (NoResultException nre) {
                 rule = new Rule();
                 rule.setApplication(application);
@@ -245,5 +256,13 @@ public class RuleBean {
     @Transactional
     public void removeFlag(Long id) {
         markDeleted(find(id));
+    }
+
+    public void scheduleRollout(CreateRolloutDto crd) {
+        Application application = applicationBean.find(crd.getAppId());
+        Flag flag = flagBean.find(crd.getFlagId());
+
+        rolloutWorkerBean.scheduleRollout(application, flag, crd.getNumberOfRollouts(),
+                crd.getNewValue(), crd.getInterval(), crd.getTimeUnit(), Timestamp.from(crd.getExpirationDate()));
     }
 }

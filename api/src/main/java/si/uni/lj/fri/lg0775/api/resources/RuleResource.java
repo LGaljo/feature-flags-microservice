@@ -1,6 +1,7 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.RuleBean;
+import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 
 import javax.enterprise.context.RequestScoped;
@@ -31,11 +32,12 @@ public class RuleResource {
                 .build();
     }
 
-    @GET
-    @Path("flag")
-    public Response getRulesForFlag(@QueryParam("flag_id") long flag_id) {
+    @POST
+    @Path("rollout")
+    public Response createRollout(CreateRolloutDto crd) {
+        ruleBean.scheduleRollout(crd);
         return Response
-                .ok(ruleBean.getRulesDtoForFlag(flag_id))
+                .ok()
                 .build();
     }
 
@@ -48,10 +50,10 @@ public class RuleResource {
     }
 
     @GET
-    @Path("{user_id}")
-    public Response getRulesForAppByUserID(@PathParam("user_id") Long user_id) {
+    @Path("flag")
+    public Response getRulesForFlag(@QueryParam("flag_id") long flag_id) {
         return Response
-                .ok(ruleBean.getRulesDtoForUserID(user_id))
+                .ok(ruleBean.getRulesDtoForFlag(flag_id))
                 .build();
     }
 }
