@@ -1,20 +1,16 @@
-package si.uni.lj.fri.lg0775.api.seeds;
+package si.uni.lj.fri.lg0775.services.bussines_beans;
 
 import si.uni.lj.fri.lg0775.entities.db.Application;
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
-import si.uni.lj.fri.lg0775.services.beans.ApplicationBean;
-import si.uni.lj.fri.lg0775.services.beans.EndUserBean;
-import si.uni.lj.fri.lg0775.services.beans.FlagBean;
+import si.uni.lj.fri.lg0775.services.beans.*;
 import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Initialized;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.UUID;
 
 @ApplicationScoped
-public class Seed {
+public class SeedBean {
     @Inject
     private ApplicationBean applicationBean;
 
@@ -24,7 +20,13 @@ public class Seed {
     @Inject
     private FlagBean flagBean;
 
-    public void onInit(@Observes @Initialized(ApplicationScoped.class) Object init) {
+    @Inject
+    private ScheduledRolloutBean scheduledRolloutBean;
+
+    @Inject
+    private RuleBean ruleBean;
+
+    public void onInit() {
         // Create apps
         Application app1 = applicationBean.createApp("instapid");
         Application app2 = applicationBean.createApp("bikebook");
@@ -90,5 +92,13 @@ public class Seed {
         for (int i = 0; i < 10; i++) {
             endUserBean.saveEndUser(UUID.randomUUID().toString(), demoApp);
         }
+    }
+
+    public void clearDatabase() {
+        ruleBean.deleteAll();
+        endUserBean.deleteAll();
+        flagBean.deleteAll();
+        applicationBean.deleteAll();
+        scheduledRolloutBean.deleteAll();
     }
 }

@@ -1,6 +1,7 @@
 package si.uni.lj.fri.lg0775.services.beans;
 
 import si.uni.lj.fri.lg0775.entities.db.Application;
+import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
@@ -12,6 +13,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.time.Instant;
@@ -54,6 +58,15 @@ public class FlagBean {
 
         em.persist(e);
         em.flush();
+    }
+
+    @Transactional
+    public void deleteAll() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<Flag> delete = builder.createCriteriaDelete(Flag.class);
+        delete.from(Flag.class);
+        Query query1 = em.createQuery(delete);
+        query1.executeUpdate();
     }
 
     // Find

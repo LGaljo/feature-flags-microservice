@@ -1,10 +1,8 @@
 package si.uni.lj.fri.lg0775.services.beans;
 
-import si.uni.lj.fri.lg0775.entities.db.Application;
-import si.uni.lj.fri.lg0775.entities.db.EndUser;
-import si.uni.lj.fri.lg0775.entities.db.Flag;
-import si.uni.lj.fri.lg0775.entities.db.Rule;
+import si.uni.lj.fri.lg0775.entities.db.*;
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
+import si.uni.lj.fri.lg0775.services.bussines_beans.RolloutWorkerBean;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 import si.uni.lj.fri.lg0775.services.dtos.RuleDto;
@@ -16,6 +14,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
@@ -68,6 +69,15 @@ public class RuleBean {
 
         em.persist(e);
         em.flush();
+    }
+
+    @Transactional
+    public void deleteAll() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<Rule> delete = builder.createCriteriaDelete(Rule.class);
+        delete.from(Rule.class);
+        Query query1 = em.createQuery(delete);
+        query1.executeUpdate();
     }
 
     // Find

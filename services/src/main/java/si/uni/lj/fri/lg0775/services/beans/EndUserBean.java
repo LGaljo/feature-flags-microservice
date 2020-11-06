@@ -12,6 +12,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.sql.Timestamp;
@@ -60,6 +63,15 @@ public class EndUserBean {
 
         em.persist(e);
         em.flush();
+    }
+
+    @Transactional
+    public void deleteAll() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<EndUser> delete = builder.createCriteriaDelete(EndUser.class);
+        delete.from(EndUser.class);
+        Query query1 = em.createQuery(delete);
+        query1.executeUpdate();
     }
 
     // Find

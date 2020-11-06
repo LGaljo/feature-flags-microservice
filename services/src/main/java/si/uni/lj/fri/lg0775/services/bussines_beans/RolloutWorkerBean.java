@@ -1,6 +1,9 @@
-package si.uni.lj.fri.lg0775.services.beans;
+package si.uni.lj.fri.lg0775.services.bussines_beans;
 
 import si.uni.lj.fri.lg0775.entities.db.*;
+import si.uni.lj.fri.lg0775.services.beans.EndUserBean;
+import si.uni.lj.fri.lg0775.services.beans.RuleBean;
+import si.uni.lj.fri.lg0775.services.beans.ScheduledRolloutBean;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -10,9 +13,6 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class RolloutWorkerBean {
-    private final Logger LOG = Logger.getLogger("RolloutWorkerBean");
+    private final Logger LOG = Logger.getLogger(RolloutWorkerBean.class.getName());
 
     @Inject
     private EndUserBean endUserBean;

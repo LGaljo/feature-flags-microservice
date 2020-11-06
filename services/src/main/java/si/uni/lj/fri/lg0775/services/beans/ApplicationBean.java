@@ -6,6 +6,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,15 @@ public class ApplicationBean {
     public void delete(Application e) {
         em.remove(e);
         em.flush();
+    }
+
+    @Transactional
+    public void deleteAll() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<Application> delete = builder.createCriteriaDelete(Application.class);
+        delete.from(Application.class);
+        Query query1 = em.createQuery(delete);
+        query1.executeUpdate();
     }
 
     // Mark deleted
