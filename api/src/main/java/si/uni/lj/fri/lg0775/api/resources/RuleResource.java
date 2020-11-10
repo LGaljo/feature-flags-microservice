@@ -1,8 +1,11 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.RuleBean;
+import si.uni.lj.fri.lg0775.services.beans.GradualRolloutBean;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
+import si.uni.lj.fri.lg0775.services.dtos.GradualRolloutDto;
+import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -20,6 +23,9 @@ public class RuleResource {
 
     @Inject
     private RuleBean ruleBean;
+
+    @Inject
+    private GradualRolloutBean srb;
 
     @POST
     public Response create(
@@ -42,10 +48,26 @@ public class RuleResource {
     }
 
     @GET
+    @Path("rollout")
+    public Response getActiveRollouts(@QueryParam("appId") Long appId) {
+        if (appId == null) {
+            return Response.ok(DtoMapper.toRolloutDto(srb.getUnfinishedRollouts())).build();
+        } else {
+            return Response.ok(DtoMapper.toRolloutDto(srb.getUnfinishedRolloutsForApp(appId))).build();
+        }
+    }
+
+    @GET
+    @Path("rollout/{srId}")
+    public Response getRollout(@PathParam("srId") Long srId) {
+
+        return Response.ok(DtoMapper.toRolloutDto(srb.getRollout(srId))).build();
+    }
+
+    @GET
     public Response getRulesForAppByClientID(@QueryParam("client_id") String clientId) {
         return Response
-                .status(Response.Status.OK)
-                .entity(ruleBean.getRulesForApp(clientId))
+                .ok(ruleBean.getRulesForApp(clientId))
                 .build();
     }
 

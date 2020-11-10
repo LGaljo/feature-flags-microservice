@@ -7,6 +7,7 @@ import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
 import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
+import si.uni.lj.fri.lg0775.services.dtos.Share;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -20,6 +21,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -153,9 +155,10 @@ public class FlagBean {
 
         CreateRuleDto crd = new CreateRuleDto();
         crd.setDataType(flag.getDataType());
-        crd.setExpirationDate(Instant.now().plus(45, ChronoUnit.DAYS));
         crd.setRuleType(RuleType.SAME_FOR_EVERYONE);
-        crd.setValue(flag.getDefaultValue());
+        List<Share> shares = new ArrayList<>();
+        shares.add(new Share(flag.getDefaultValue(), 100));
+        crd.setShares(shares);
         ruleBean.createRule(crd, application.getId(), flag.getId());
     }
 

@@ -5,23 +5,27 @@ import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.DefaultValue;
 import java.io.Serializable;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 @Entity
-@Table(name = "scheduledrollout")
+@Table(name = "gradualrollout")
 @EntityListeners(BaseEntityListener.class)
 @NamedQueries({
         @NamedQuery(
-                name = "ScheduledRollout.getUnfinished",
-                query = "SELECT sr FROM ScheduledRollout sr" +
-                        " WHERE sr.deleted <> false" +
-                        " AND sr.completed <> true")
+                name = "GradualRollout.getUnfinished",
+                query = "SELECT sr FROM GradualRollout sr" +
+                        " WHERE sr.deleted = false" +
+                        " AND sr.completed < 100"),
+        @NamedQuery(
+                name = "GradualRollout.getUnfinishedForApp",
+                query = "SELECT sr FROM GradualRollout sr" +
+                        " WHERE sr.deleted = false" +
+                        " AND sr.application.id = :appId" +
+                        " AND sr.completed < 100")
 })
-public class ScheduledRollout extends BaseEntity implements Serializable {
+public class GradualRollout extends BaseEntity implements Serializable {
     @NotNull
     private String uuid;
 
@@ -29,19 +33,16 @@ public class ScheduledRollout extends BaseEntity implements Serializable {
     private Integer newValue;
 
     @NotNull
-    private Integer numOfRollouts;
+    private Integer numOfSteps;
 
     @NotNull
-    private Long interval;
+    private Integer interval;
 
     @NotNull
     private TimeUnit timeUnit;
 
     @NotNull
-    private Timestamp expirationDate;
-
-    @NotNull
-    private Boolean completed;
+    private Integer completed;
 
     @ManyToOne
     private Flag flag;
@@ -49,7 +50,7 @@ public class ScheduledRollout extends BaseEntity implements Serializable {
     @ManyToOne
     private Application application;
 
-    public ScheduledRollout() {
+    public GradualRollout() {
     }
 
     public String getUuid() {
@@ -68,19 +69,19 @@ public class ScheduledRollout extends BaseEntity implements Serializable {
         this.newValue = newValue;
     }
 
-    public Integer getNumOfRollouts() {
-        return numOfRollouts;
+    public Integer getNumOfSteps() {
+        return numOfSteps;
     }
 
-    public void setNumOfRollouts(Integer numOfRollouts) {
-        this.numOfRollouts = numOfRollouts;
+    public void setNumOfSteps(Integer numOfRollouts) {
+        this.numOfSteps = numOfRollouts;
     }
 
-    public Boolean getCompleted() {
+    public Integer getCompleted() {
         return completed;
     }
 
-    public void setCompleted(Boolean completedRollouts) {
+    public void setCompleted(Integer completedRollouts) {
         this.completed = completedRollouts;
     }
 
@@ -100,11 +101,11 @@ public class ScheduledRollout extends BaseEntity implements Serializable {
         this.application = application;
     }
 
-    public Long getInterval() {
+    public Integer getInterval() {
         return interval;
     }
 
-    public void setInterval(Long interval) {
+    public void setInterval(Integer interval) {
         this.interval = interval;
     }
 
@@ -114,13 +115,5 @@ public class ScheduledRollout extends BaseEntity implements Serializable {
 
     public void setTimeUnit(TimeUnit timeUnit) {
         this.timeUnit = timeUnit;
-    }
-
-    public Timestamp getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(Timestamp expirationDate) {
-        this.expirationDate = expirationDate;
     }
 }

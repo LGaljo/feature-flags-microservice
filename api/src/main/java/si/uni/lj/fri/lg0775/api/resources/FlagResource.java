@@ -2,6 +2,7 @@ package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.FlagBean;
 import si.uni.lj.fri.lg0775.services.dtos.CreateFlagDto;
+import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ public class FlagResource {
     @GET
     public Response getFlag(@QueryParam("id") Long flag_id) {
         return Response
-                .ok(flagBean.get(flag_id))
+                .ok(DtoMapper.toFlagDto(flagBean.get(flag_id)))
                 .build();
     }
 

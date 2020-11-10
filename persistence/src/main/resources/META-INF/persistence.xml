@@ -11,13 +11,13 @@
         <class>si.uni.lj.fri.lg0775.entities.db.EndUser</class>
         <class>si.uni.lj.fri.lg0775.entities.db.Flag</class>
         <class>si.uni.lj.fri.lg0775.entities.db.Rule</class>
-        <class>si.uni.lj.fri.lg0775.entities.db.ScheduledRollout</class>
+        <class>si.uni.lj.fri.lg0775.entities.db.GradualRollout</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
-<!--            <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>-->
+            <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>
             <property name="eclipselink.allow-zero-id" value="true"/>
         </properties>
     </persistence-unit>

@@ -20,7 +20,6 @@ import javax.ws.rs.NotFoundException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,7 +138,6 @@ public class EndUserBean {
             rule.setApplication(application);
             rule.setEndUser(endUser);
             rule.setFlag(f);
-            rule.setExpirationDate(Timestamp.from(Instant.now().plus(30, ChronoUnit.DAYS)));
             rule.setValue(f.getDefaultValue());
             ruleBean.create(rule);
         });

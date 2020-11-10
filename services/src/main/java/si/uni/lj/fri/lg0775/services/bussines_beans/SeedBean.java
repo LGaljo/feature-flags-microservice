@@ -8,9 +8,12 @@ import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class SeedBean {
+    private final Logger LOG = Logger.getLogger(SeedBean.class.getName());
+
     @Inject
     private ApplicationBean applicationBean;
 
@@ -21,7 +24,7 @@ public class SeedBean {
     private FlagBean flagBean;
 
     @Inject
-    private ScheduledRolloutBean scheduledRolloutBean;
+    private GradualRolloutBean gradualRolloutBean;
 
     @Inject
     private RuleBean ruleBean;
@@ -95,10 +98,11 @@ public class SeedBean {
     }
 
     public void clearDatabase() {
+        LOG.info("Clear database");
         ruleBean.deleteAll();
+        gradualRolloutBean.deleteAll();
         endUserBean.deleteAll();
         flagBean.deleteAll();
         applicationBean.deleteAll();
-        scheduledRolloutBean.deleteAll();
     }
 }

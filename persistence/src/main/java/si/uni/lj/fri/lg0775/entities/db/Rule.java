@@ -56,22 +56,6 @@ public class Rule extends BaseEntity implements Serializable {
     @NotNull
     private int value;
 
-    @Basic
-    @NotNull
-    private Timestamp expirationDate;
-
-    public boolean hasExpired() {
-        return expirationDate.toInstant().isBefore(Instant.now());
-    }
-
-    public Timestamp getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(Timestamp expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
     public EndUser getEndUser() {
         return endUser;
     }

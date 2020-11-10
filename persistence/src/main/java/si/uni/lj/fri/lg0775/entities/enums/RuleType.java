@@ -4,4 +4,5 @@ public enum RuleType {
     SAME_FOR_EVERYONE,
     AB_TESTING,
     USER_SPECIFIC,
+    GRADUAL_ROLLOUT
 }

@@ -11,19 +11,17 @@ public class RuleDto {
     private DataType dataType;
     private int value;
     private String clientId;
-    private Instant expirationDate;
 
     public RuleDto() {
     }
 
-    public RuleDto(Long id, String name, String description, DataType dataType, int value, String clientId, Instant expirationDate) {
+    public RuleDto(Long id, String name, String description, DataType dataType, int value, String clientId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.dataType = dataType;
         this.value = value;
         this.clientId = clientId;
-        this.expirationDate = expirationDate;
     }
 
     public Long getId() {
@@ -72,13 +70,5 @@ public class RuleDto {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
-    }
-
-    public Instant getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(Instant expirationDate) {
-        this.expirationDate = expirationDate;
     }
 }

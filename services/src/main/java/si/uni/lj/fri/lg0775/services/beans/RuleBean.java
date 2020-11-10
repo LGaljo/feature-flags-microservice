@@ -1,11 +1,11 @@
 package si.uni.lj.fri.lg0775.services.beans;
 
-import si.uni.lj.fri.lg0775.entities.db.*;
-import si.uni.lj.fri.lg0775.entities.enums.DataType;
+import si.uni.lj.fri.lg0775.entities.db.Application;
+import si.uni.lj.fri.lg0775.entities.db.EndUser;
+import si.uni.lj.fri.lg0775.entities.db.Flag;
+import si.uni.lj.fri.lg0775.entities.db.Rule;
 import si.uni.lj.fri.lg0775.services.bussines_beans.RolloutWorkerBean;
-import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
-import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
-import si.uni.lj.fri.lg0775.services.dtos.RuleDto;
+import si.uni.lj.fri.lg0775.services.dtos.*;
 import si.uni.lj.fri.lg0775.services.exceptions.InvalidDataException;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
@@ -18,9 +18,8 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -86,8 +85,8 @@ public class RuleBean {
     }
 
     // Contains
-    public boolean contains(Long id) {
-        return em.contains(id);
+    public boolean contains(Rule e) {
+        return em.contains(e);
     }
 
     public Rule getRuleForUser(EndUser endUser, Flag flag) {
@@ -104,6 +103,10 @@ public class RuleBean {
         Application application = applicationBean.find(appId);
         Flag flag = flagBean.find(flagId);
 
+        if (crd.getShares() == null || crd.getShares().isEmpty()) {
+            throw new InvalidDataException("Shares are empty");
+        }
+
         switch (crd.getRuleType()) {
             case SAME_FOR_EVERYONE:
                 createRuleForEveryone(crd, application, flag);
@@ -116,7 +119,6 @@ public class RuleBean {
                 break;
             default:
                 throw new RuntimeException("This type does not exist or is not supported yet");
-
         }
         return null;
     }
@@ -130,6 +132,7 @@ public class RuleBean {
         try {
             rule = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
                     .setParameter("clientId", endUser.getClient())
+                    .setParameter("flagId", flag.getId())
                     .getResultList().get(0);
         } catch (NoResultException nre) {
             rule = new Rule();
@@ -138,8 +141,7 @@ public class RuleBean {
             rule.setFlag(flag);
         }
 
-        rule.setExpirationDate(Timestamp.from(crd.getExpirationDate()));
-        rule.setValue(crd.getValue());
+        rule.setValue(crd.getShares().get(0).getValue());
 
         // Persist
         if (rule.getId() == null) {
@@ -159,6 +161,7 @@ public class RuleBean {
             try {
                 rule = em.createNamedQuery("Rule.getRuleForUser", Rule.class)
                         .setParameter("clientId", endUser.getClient())
+                        .setParameter("flagId", flag.getId())
                         .getSingleResult();
             } catch (NoResultException nre) {
                 rule = new Rule();
@@ -167,8 +170,7 @@ public class RuleBean {
                 rule.setFlag(flag);
             }
 
-            rule.setExpirationDate(Timestamp.from(crd.getExpirationDate()));
-            rule.setValue(crd.getValue());
+            rule.setValue(crd.getShares().get(0).getValue());
 
             // Persist
             if (rule.getId() == null) {
@@ -179,46 +181,51 @@ public class RuleBean {
         });
     }
 
+    @Transactional
     private void createABTestingRule(CreateRuleDto crd, Application application, Flag flag) {
         // Check value of shareOfA
-        if (crd.getShareOfA() <= 0 || crd.getShareOfA() >= 100) {
-            throw new InvalidDataException("Share of group A should be between 0 and 100");
+        int sum = 0;
+        for (Share share : crd.getShares()) {
+            sum += share.getShare();
+        }
+
+        if (sum <= 0 || sum > 100) {
+            throw new InvalidDataException("Sum of shares should be between 0 and 100");
         }
 
         // Get all users of that app
         List<EndUser> users = endUserBean.getUsersOfApp(application.getId());
-        Random rand = new Random();
+        Collections.shuffle(users);
 
-        users.forEach(endUser -> {
-            Rule rule;
-            try {
-                rule = getRuleForUser(endUser, flag);
-            } catch (NoResultException nre) {
-                rule = new Rule();
-                rule.setApplication(application);
-                rule.setEndUser(endUser);
-                rule.setFlag(flag);
-            }
+        int last_amount = 0;
+        for (Share s : crd.getShares()) {
+            int amount = (int) Math.ceil(users.size() * (double) s.getShare() / 100);
 
-            rule.setExpirationDate(Timestamp.from(crd.getExpirationDate()));
-            int rand_int = rand.nextInt(100) + 1;
-            if (rand_int < crd.getShareOfA()) {
-                rule.setValue(crd.getValue());
-            } else {
-                if (crd.getDataType() == DataType.BOOL) {
-                    rule.setValue(Math.abs(crd.getValue() - 1));
+            for (int i = last_amount; i < last_amount + amount && i < users.size(); i++) {
+                EndUser endUser = users.get(i);
+
+                Rule rule;
+                try {
+                    rule = getRuleForUser(endUser, flag);
+                } catch (NoResultException nre) {
+                    rule = new Rule();
+                    rule.setApplication(application);
+                    rule.setEndUser(endUser);
+                    rule.setFlag(flag);
+                }
+
+                rule.setValue(s.getValue());
+
+                // Persist
+                if (rule.getId() == null) {
+                    create(rule);
                 } else {
-                    rule.setValue(crd.getValueB());
+                    update(rule);
                 }
             }
 
-            // Persist
-            if (rule.getId() == null) {
-                create(rule);
-            } else {
-                update(rule);
-            }
-        });
+            last_amount += amount;
+        }
     }
 
     public List<Rule> getRulesForFlag(long flag_id) {
@@ -236,7 +243,6 @@ public class RuleBean {
                 .setParameter("clientId", clientId)
                 .getResultList()
                 .stream()
-                .filter(r -> !r.hasExpired())
                 .map(DtoMapper::toRuleDto)
                 .collect(Collectors.toList());
     }
@@ -272,7 +278,7 @@ public class RuleBean {
         Application application = applicationBean.find(crd.getAppId());
         Flag flag = flagBean.find(crd.getFlagId());
 
-        rolloutWorkerBean.scheduleRollout(application, flag, crd.getNumberOfRollouts(),
-                crd.getNewValue(), crd.getInterval(), crd.getTimeUnit(), Timestamp.from(crd.getExpirationDate()));
+        rolloutWorkerBean.scheduleRollout(null, application, flag, crd.getNumOfSteps(),
+                crd.getNewValue(), crd.getInterval(), crd.getTimeUnit());
     }
 }

@@ -1,35 +1,16 @@
 package si.uni.lj.fri.lg0775.services.dtos;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 public class CreateRolloutDto {
     private Long appId;
     private Long flagId;
-    private Integer numberOfRollouts;
+    private Integer interval;
     private Integer newValue;
-    private Long interval;
+    private Integer numOfSteps;
     private TimeUnit timeUnit;
-    private Instant expirationDate;
 
     public CreateRolloutDto() {
-    }
-
-    public Integer getNumberOfRollouts() {
-        return numberOfRollouts;
-    }
-
-    public void setNumberOfRollouts(Integer numberOfRollouts) {
-        this.numberOfRollouts = numberOfRollouts;
-    }
-
-    public Integer getNewValue() {
-        return newValue;
-    }
-
-    public void setNewValue(Integer newValue) {
-        this.newValue = newValue;
     }
 
     public Long getAppId() {
@@ -48,12 +29,28 @@ public class CreateRolloutDto {
         this.flagId = flagId;
     }
 
-    public Long getInterval() {
+    public Integer getInterval() {
         return interval;
     }
 
-    public void setInterval(Long interval) {
+    public void setInterval(Integer interval) {
         this.interval = interval;
+    }
+
+    public Integer getNewValue() {
+        return newValue;
+    }
+
+    public void setNewValue(Integer newValue) {
+        this.newValue = newValue;
+    }
+
+    public Integer getNumOfSteps() {
+        return numOfSteps;
+    }
+
+    public void setNumOfSteps(Integer numOfSteps) {
+        this.numOfSteps = numOfSteps;
     }
 
     public TimeUnit getTimeUnit() {
@@ -62,13 +59,5 @@ public class CreateRolloutDto {
 
     public void setTimeUnit(TimeUnit timeUnit) {
         this.timeUnit = timeUnit;
-    }
-
-    public Instant getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(Instant expirationDate) {
-        this.expirationDate = expirationDate;
     }
 }
