@@ -1,4 +1,4 @@
-package si.uni.lj.fri.lg0775.services.dtos;
+package si.uni.lj.fri.lg0775.services.dtos.models;
 
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
 

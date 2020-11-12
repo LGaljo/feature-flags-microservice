@@ -1,19 +1,17 @@
-package si.uni.lj.fri.lg0775.services.dtos;
+package si.uni.lj.fri.lg0775.services.dtos.models;
 
 import java.sql.Timestamp;
 
 public class EndUserDto {
     private Long id;
     private String client;
-    private Timestamp createdAt;
 
     public EndUserDto() {
     }
 
-    public EndUserDto(Long id, String client, Timestamp createdAt) {
+    public EndUserDto(Long id, String client) {
         this.id = id;
         this.client = client;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -30,13 +28,5 @@ public class EndUserDto {
 
     public void setClient(String client) {
         this.client = client;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
     }
 }

@@ -1,7 +1,7 @@
-package si.uni.lj.fri.lg0775.services.dtos;
+package si.uni.lj.fri.lg0775.services.dtos.models;
 
 import si.uni.lj.fri.lg0775.entities.db.Application;
-import si.uni.lj.fri.lg0775.entities.db.Flag;
+
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
@@ -9,6 +9,7 @@ public class GradualRolloutDto {
     private Long id;
     private Application application;
     private Integer completed;
+    private Instant createdAt;
     private FlagDto flag;
     private Integer interval;
     private Integer newValue;
@@ -41,6 +42,14 @@ public class GradualRolloutDto {
 
     public void setCompleted(Integer completed) {
         this.completed = completed;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public FlagDto getFlag() {

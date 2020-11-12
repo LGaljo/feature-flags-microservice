@@ -1,5 +1,7 @@
 package si.uni.lj.fri.lg0775.services.dtos;
 
+import si.uni.lj.fri.lg0775.services.dtos.models.FlagDto;
+
 import java.util.List;
 
 public class CreateFlagDto {

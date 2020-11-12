@@ -6,6 +6,7 @@ import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.db.Rule;
 import si.uni.lj.fri.lg0775.services.bussines_beans.RolloutWorkerBean;
 import si.uni.lj.fri.lg0775.services.dtos.*;
+import si.uni.lj.fri.lg0775.services.dtos.models.RuleDto;
 import si.uni.lj.fri.lg0775.services.exceptions.InvalidDataException;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 

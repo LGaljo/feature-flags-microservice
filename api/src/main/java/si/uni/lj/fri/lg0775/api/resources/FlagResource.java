@@ -1,7 +1,7 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.FlagBean;
-import si.uni.lj.fri.lg0775.services.dtos.CreateFlagDto;
+import si.uni.lj.fri.lg0775.services.dtos.models.FlagDto;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.RequestScoped;
@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
@@ -35,8 +36,8 @@ public class FlagResource {
     }
 
     @POST
-    public Response create(CreateFlagDto data) {
-        flagBean.createFlags(data.getFlags(), data.getAppId());
+    public Response create(List<FlagDto> data) {
+        flagBean.createFlags(data);
         return Response.status(Response.Status.CREATED).build();
     }
 

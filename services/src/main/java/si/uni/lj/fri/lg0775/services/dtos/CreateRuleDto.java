@@ -3,7 +3,6 @@ package si.uni.lj.fri.lg0775.services.dtos;
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 
-import java.time.Instant;
 import java.util.List;
 
 public class CreateRuleDto {

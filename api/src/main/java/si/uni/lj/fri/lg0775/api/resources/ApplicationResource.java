@@ -1,7 +1,8 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.ApplicationBean;
-import si.uni.lj.fri.lg0775.services.dtos.NewAppDto;
+import si.uni.lj.fri.lg0775.services.dtos.models.AppDto;
+import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ public class ApplicationResource {
     private ApplicationBean applicationBean;
 
     @POST
-    public Response create(NewAppDto name) {
+    public Response create(AppDto name) {
         return Response
                 .status(Response.Status.CREATED)
                 .entity(applicationBean.createApp(name.getName()))
@@ -29,7 +30,7 @@ public class ApplicationResource {
     public Response getAll() {
         return Response
                 .ok()
-                .entity(applicationBean.getAll())
+                .entity(DtoMapper.toAppsDto(applicationBean.getAll()))
                 .build();
     }
 
@@ -38,7 +39,7 @@ public class ApplicationResource {
     public Response get(@PathParam("id") Long id) {
         return Response
                 .ok()
-                .entity(applicationBean.find(id))
+                .entity(DtoMapper.toAppDto(applicationBean.find(id)))
                 .build();
     }
 

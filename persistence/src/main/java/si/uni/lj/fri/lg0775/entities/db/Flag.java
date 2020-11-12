@@ -7,6 +7,7 @@ import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "flags")
@@ -19,19 +20,17 @@ import java.io.Serializable;
         ),
 })
 public class Flag extends BaseEntity implements Serializable {
-    @Basic
     @NotNull
     private int defaultValue;
 
-    @Basic
     @NotNull
     @Column(unique = true)
     private String name;
 
-    @Basic
     private String description;
 
-    @Basic
+    private Timestamp expirationDate;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private DataType dataType;
@@ -40,12 +39,18 @@ public class Flag extends BaseEntity implements Serializable {
     @JoinColumn(name = "application_id")
     private Application application;
 
-    public Flag(@NotNull int defaultValue, @NotNull String name, String description, @NotNull DataType dataType, Application application) {
+    public Flag(@NotNull int defaultValue,
+                @NotNull String name,
+                String description,
+                @NotNull DataType dataType,
+                Application application,
+                Timestamp expirationDate) {
         this.defaultValue = defaultValue;
         this.name = name;
         this.description = description;
         this.dataType = dataType;
         this.application = application;
+        this.expirationDate = expirationDate;
     }
 
     public Flag() {
@@ -89,5 +94,13 @@ public class Flag extends BaseEntity implements Serializable {
 
     public void setDataType(DataType dataType) {
         this.dataType = dataType;
+    }
+
+    public Timestamp getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Timestamp expirationDate) {
+        this.expirationDate = expirationDate;
     }
 }

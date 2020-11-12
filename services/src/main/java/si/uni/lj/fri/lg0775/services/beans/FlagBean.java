@@ -1,12 +1,10 @@
 package si.uni.lj.fri.lg0775.services.beans;
 
 import si.uni.lj.fri.lg0775.entities.db.Application;
-import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
-import si.uni.lj.fri.lg0775.entities.enums.DataType;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
-import si.uni.lj.fri.lg0775.services.dtos.FlagDto;
+import si.uni.lj.fri.lg0775.services.dtos.models.FlagDto;
 import si.uni.lj.fri.lg0775.services.dtos.Share;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
@@ -19,8 +17,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,12 +33,14 @@ public class FlagBean {
     private RuleBean ruleBean;
 
     // Create
+    @Transactional
     public void create(Flag e) {
         em.persist(e);
         em.flush();
     }
 
     // Update
+    @Transactional
     public void update(Flag e) {
         em.merge(e);
         em.flush();
@@ -112,19 +110,16 @@ public class FlagBean {
 
     // Aplikaciji doda seznam zastavic
     @Transactional
-    public void createFlags(List<FlagDto> flagList, Long appId) {
-        Application application = applicationBean.find(appId);
-        if (application == null) {
-            throw new NotFoundException("Application not found");
-        }
+    public void createFlags(List<FlagDto> flagList) {
 
         flagList.forEach(f -> {
+            Application application = applicationBean.find(f.getAppId());
             createFlag(f, application);
         });
     }
 
-    public void createFlag(FlagDto f, Long appId) {
-        Application application = applicationBean.find(appId);
+    public void createFlag(FlagDto f) {
+        Application application = applicationBean.find(f.getAppId());
         if (application == null) {
             throw new NotFoundException("Application not found");
         }
@@ -134,23 +129,7 @@ public class FlagBean {
     // Ustvari zastavico, ki jo doda aplikaciji
     @Transactional
     public void createFlag(FlagDto f, Application application) {
-        Flag flag = new Flag();
-        switch (f.getDataType()) {
-            case BOOL:
-                flag.setDataType(DataType.BOOL);
-                flag.setApplication(application);
-                flag.setDescription(f.getDescription());
-                flag.setName(f.getName());
-                flag.setDefaultValue(f.getDefaultValue());
-                break;
-            case INT:
-                flag.setDataType(DataType.INT);
-                flag.setApplication(application);
-                flag.setDescription(f.getDescription());
-                flag.setName(f.getName());
-                flag.setDefaultValue(f.getDefaultValue());
-                break;
-        }
+        Flag flag = DtoMapper.toFlag(f, application);
         create(flag);
 
         CreateRuleDto crd = new CreateRuleDto();

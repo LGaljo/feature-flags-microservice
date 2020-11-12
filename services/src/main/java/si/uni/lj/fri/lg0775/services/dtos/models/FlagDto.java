@@ -1,23 +1,37 @@
-package si.uni.lj.fri.lg0775.services.dtos;
+package si.uni.lj.fri.lg0775.services.dtos.models;
 
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
 
+import java.time.Instant;
+
 public class FlagDto {
+    private Long appId;
     private Long id;
     private int defaultValue;
     private String name;
     private String description;
     private DataType dataType;
+    private Instant expirationDate;
 
     public FlagDto() {
     }
 
-    public FlagDto(Long id, int defaultValue, String name, String description, DataType dataType) {
+    public FlagDto(Long appId, Long id, int defaultValue, String name, String description, DataType dataType, Instant expirationDate) {
+        this.appId = appId;
         this.id = id;
         this.defaultValue = defaultValue;
         this.name = name;
         this.description = description;
         this.dataType = dataType;
+        this.expirationDate = expirationDate;
+    }
+
+    public Long getAppId() {
+        return appId;
+    }
+
+    public void setAppId(Long appId) {
+        this.appId = appId;
     }
 
     public Long getId() {
@@ -58,5 +72,13 @@ public class FlagDto {
 
     public void setDataType(DataType dataType) {
         this.dataType = dataType;
+    }
+
+    public Instant getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Instant expirationDate) {
+        this.expirationDate = expirationDate;
     }
 }

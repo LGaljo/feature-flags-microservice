@@ -4,7 +4,6 @@ import si.uni.lj.fri.lg0775.services.beans.RuleBean;
 import si.uni.lj.fri.lg0775.services.beans.GradualRolloutBean;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
-import si.uni.lj.fri.lg0775.services.dtos.GradualRolloutDto;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.RequestScoped;
