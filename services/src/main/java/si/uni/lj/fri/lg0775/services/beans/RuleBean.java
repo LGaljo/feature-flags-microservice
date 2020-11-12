@@ -180,6 +180,11 @@ public class RuleBean {
                 update(rule);
             }
         });
+
+        if (crd.isChangeDefault()) {
+            flag.setDefaultValue(crd.getShares().get(0).getValue());
+            flagBean.update(flag);
+        }
     }
 
     @Transactional

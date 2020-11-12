@@ -10,6 +10,7 @@ public class CreateRuleDto {
     private DataType dataType;
     private List<Share> shares;
     private Long user;
+    private boolean changeDefault;
 
     public CreateRuleDto() {
     }
@@ -44,5 +45,13 @@ public class CreateRuleDto {
 
     public void setShares(List<Share> shares) {
         this.shares = shares;
+    }
+
+    public boolean isChangeDefault() {
+        return changeDefault;
+    }
+
+    public void setChangeDefault(boolean changeDefault) {
+        this.changeDefault = changeDefault;
     }
 }
