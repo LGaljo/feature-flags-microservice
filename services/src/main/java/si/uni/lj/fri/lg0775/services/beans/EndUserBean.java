@@ -106,12 +106,14 @@ public class EndUserBean {
     }
 
     // Pridobi vse uporabnike te aplikacije
+    @Transactional
     public List<EndUser> getUsersOfApp(Long appId) {
         return em.createNamedQuery("EndUser.getEndUsersByAppID", EndUser.class)
                 .setParameter("applicationId", appId)
                 .getResultList();
     }
 
+    @Transactional
     public List<Rule> getUsersIfAppWONewValue(Long appId, Long flagId, int newValue) {
         return em.createNamedQuery("EndUser.getUsersIfAppWONewValue", Rule.class)
                 .setParameter("applicationId", appId)
@@ -129,7 +131,15 @@ public class EndUserBean {
             create(endUser);
         }
 
+        if (application.getId() == null) {
+            return endUser;
+        }
+
         List<Flag> flags = flagBean.getFlagsForApp(application.getId());
+        if (flags.isEmpty()) {
+            return endUser;
+        }
+
         flags.forEach(f -> {
             Rule rule = new Rule();
             rule.setApplication(application);

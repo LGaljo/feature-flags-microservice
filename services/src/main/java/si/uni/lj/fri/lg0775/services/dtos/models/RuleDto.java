@@ -2,8 +2,6 @@ package si.uni.lj.fri.lg0775.services.dtos.models;
 
 import si.uni.lj.fri.lg0775.entities.enums.DataType;
 
-import java.time.Instant;
-
 public class RuleDto {
     private Long id;
     private String name;

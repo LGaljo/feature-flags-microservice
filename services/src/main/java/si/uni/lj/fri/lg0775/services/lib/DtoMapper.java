@@ -79,10 +79,18 @@ public class DtoMapper {
         return lsr.stream().map(DtoMapper::toRolloutDto).collect(Collectors.toList());
     }
 
+    public static AppDto toAppDto(Application application, List<Flag> flags) {
+        return new AppDto(
+                application.getId(),
+                application.getName(),
+                toFlagsDto(flags)
+        );
+    }
+
     public static AppDto toAppDto(Application application) {
         return new AppDto(
-                application.getName(),
-                application.getId()
+                application.getId(),
+                application.getName()
         );
     }
 

@@ -1,6 +1,7 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.ApplicationBean;
+import si.uni.lj.fri.lg0775.services.beans.FlagBean;
 import si.uni.lj.fri.lg0775.services.dtos.models.AppDto;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
@@ -17,6 +18,9 @@ import javax.ws.rs.core.Response;
 public class ApplicationResource {
     @Inject
     private ApplicationBean applicationBean;
+
+    @Inject
+    private FlagBean flagBean;
 
     @POST
     public Response create(AppDto name) {
@@ -39,12 +43,12 @@ public class ApplicationResource {
     public Response get(@PathParam("id") Long id) {
         return Response
                 .ok()
-                .entity(DtoMapper.toAppDto(applicationBean.find(id)))
+                .entity(DtoMapper.toAppDto(applicationBean.find(id), flagBean.getFlagsForApp(id)))
                 .build();
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("{id}")
     public Response delete(@PathParam("id") Long id) {
         applicationBean.removeApp(id);
 

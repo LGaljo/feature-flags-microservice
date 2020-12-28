@@ -1,7 +1,5 @@
 package si.uni.lj.fri.lg0775.services.dtos.models;
 
-import java.sql.Timestamp;
-
 public class EndUserDto {
     private Long id;
     private String client;

@@ -1,30 +1,21 @@
 package si.uni.lj.fri.lg0775.api.resources;
 
 import si.uni.lj.fri.lg0775.services.beans.RuleBean;
-import si.uni.lj.fri.lg0775.services.beans.GradualRolloutBean;
-import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
-import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.logging.Logger;
 
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("rules")
 public class RuleResource {
-    private static final Logger LOG = Logger.getLogger(RuleResource.class.getName());
-
     @Inject
     private RuleBean ruleBean;
-
-    @Inject
-    private GradualRolloutBean srb;
 
     @POST
     public Response create(
@@ -34,33 +25,8 @@ public class RuleResource {
     ) {
         return Response
                 .ok(ruleBean.createRule(crd, app_id, flag_id))
+                .status(Response.Status.CREATED)
                 .build();
-    }
-
-    @POST
-    @Path("rollout")
-    public Response createRollout(CreateRolloutDto crd) {
-        ruleBean.scheduleRollout(crd);
-        return Response
-                .ok()
-                .build();
-    }
-
-    @GET
-    @Path("rollout")
-    public Response getActiveRollouts(@QueryParam("appId") Long appId) {
-        if (appId == null) {
-            return Response.ok(DtoMapper.toRolloutDto(srb.getUnfinishedRollouts())).build();
-        } else {
-            return Response.ok(DtoMapper.toRolloutDto(srb.getUnfinishedRolloutsForApp(appId))).build();
-        }
-    }
-
-    @GET
-    @Path("rollout/{srId}")
-    public Response getRollout(@PathParam("srId") Long srId) {
-
-        return Response.ok(DtoMapper.toRolloutDto(srb.getRollout(srId))).build();
     }
 
     @GET

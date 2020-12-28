@@ -6,12 +6,12 @@ import java.time.Instant;
 
 public class FlagDto {
     private Long appId;
-    private Long id;
-    private int defaultValue;
-    private String name;
-    private String description;
     private DataType dataType;
+    private int defaultValue;
+    private String description;
     private Instant expirationDate;
+    private Long id;
+    private String name;
 
     public FlagDto() {
     }

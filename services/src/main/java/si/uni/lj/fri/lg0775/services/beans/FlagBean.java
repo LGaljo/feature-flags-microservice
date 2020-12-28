@@ -4,8 +4,8 @@ import si.uni.lj.fri.lg0775.entities.db.Application;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.enums.RuleType;
 import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
-import si.uni.lj.fri.lg0775.services.dtos.models.FlagDto;
 import si.uni.lj.fri.lg0775.services.dtos.Share;
+import si.uni.lj.fri.lg0775.services.dtos.models.FlagDto;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,10 +19,13 @@ import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class FlagBean {
+    private static final Logger LOG = Logger.getLogger(FlagBean.class.getName());
+
     @PersistenceContext(name = "feature-flags")
     private EntityManager em;
 
@@ -89,17 +92,16 @@ public class FlagBean {
 
 
     // Pridobi vse zastavice za aplikacijo, ki niso izbrisane
+    @Transactional
     public List<Flag> getFlagsForApp(Long appId) {
-        applicationBean.find(appId);
         return em.createNamedQuery("Flag.getFlagsForApplication", Flag.class)
                 .setParameter("applicationId", appId)
                 .getResultList();
     }
 
     // Pridobi vse zastavice za aplikacijo, ki niso izbrisane
+    @Transactional
     public List<FlagDto> getFlagsDto(Long appId) {
-        applicationBean.find(appId);
-
         return em.createNamedQuery("Flag.getFlagsForApplication", Flag.class)
                 .setParameter("applicationId", appId)
                 .getResultList()
@@ -111,7 +113,6 @@ public class FlagBean {
     // Aplikaciji doda seznam zastavic
     @Transactional
     public void createFlags(List<FlagDto> flagList) {
-
         flagList.forEach(f -> {
             Application application = applicationBean.find(f.getAppId());
             createFlag(f, application);
@@ -134,7 +135,7 @@ public class FlagBean {
 
         CreateRuleDto crd = new CreateRuleDto();
         crd.setDataType(flag.getDataType());
-        crd.setRuleType(RuleType.SAME_FOR_EVERYONE);
+        crd.setRuleType(RuleType.GENERAL);
         List<Share> shares = new ArrayList<>();
         shares.add(new Share(flag.getDefaultValue(), 100));
         crd.setShares(shares);

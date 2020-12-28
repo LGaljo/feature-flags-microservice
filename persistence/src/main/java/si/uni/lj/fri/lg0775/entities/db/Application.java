@@ -6,7 +6,6 @@ import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "applications")
@@ -26,11 +25,11 @@ public class Application extends BaseEntity implements Serializable {
     @NotNull
     private String name;
 
-    @Transient
-    private List<Flag> flags;
-
-    @Transient
-    private List<EndUser> users;
+//    @Transient
+//    private List<Flag> flags;
+//
+//    @Transient
+//    private List<EndUser> users;
 
     public String getName() {
         return name;
@@ -39,20 +38,20 @@ public class Application extends BaseEntity implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    public List<Flag> getFlags() {
-        return flags;
-    }
-
-    public void setFlags(List<Flag> flags) {
-        this.flags = flags;
-    }
-
-    public List<EndUser> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<EndUser> users) {
-        this.users = users;
-    }
+//
+//    public List<Flag> getFlags() {
+//        return flags;
+//    }
+//
+//    public void setFlags(List<Flag> flags) {
+//        this.flags = flags;
+//    }
+//
+//    public List<EndUser> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(List<EndUser> users) {
+//        this.users = users;
+//    }
 }

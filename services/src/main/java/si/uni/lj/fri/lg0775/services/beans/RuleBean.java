@@ -5,7 +5,9 @@ import si.uni.lj.fri.lg0775.entities.db.EndUser;
 import si.uni.lj.fri.lg0775.entities.db.Flag;
 import si.uni.lj.fri.lg0775.entities.db.Rule;
 import si.uni.lj.fri.lg0775.services.bussines_beans.RolloutWorkerBean;
-import si.uni.lj.fri.lg0775.services.dtos.*;
+import si.uni.lj.fri.lg0775.services.dtos.CreateRolloutDto;
+import si.uni.lj.fri.lg0775.services.dtos.CreateRuleDto;
+import si.uni.lj.fri.lg0775.services.dtos.Share;
 import si.uni.lj.fri.lg0775.services.dtos.models.RuleDto;
 import si.uni.lj.fri.lg0775.services.exceptions.InvalidDataException;
 import si.uni.lj.fri.lg0775.services.lib.DtoMapper;
@@ -90,6 +92,7 @@ public class RuleBean {
         return em.contains(e);
     }
 
+    @Transactional
     public Rule getRuleForUser(EndUser endUser, Flag flag) {
         return em.createNamedQuery("Rule.getRuleForUser", Rule.class)
                 .setParameter("clientId", endUser.getClient())
@@ -108,14 +111,17 @@ public class RuleBean {
             throw new InvalidDataException("Shares are empty");
         }
 
+        // Get all users of that app
+        List<EndUser> users = endUserBean.getUsersOfApp(application.getId());
+
         switch (crd.getRuleType()) {
-            case SAME_FOR_EVERYONE:
-                createRuleForEveryone(crd, application, flag);
+            case GENERAL:
+                createRuleForEveryone(crd, application, flag, users);
                 break;
             case AB_TESTING:
-                createABTestingRule(crd, application, flag);
+                createABTestingRule(crd, application, flag, users);
                 break;
-            case USER_SPECIFIC:
+            case INDIVIDUAL:
                 createRuleForSpecificUser(crd, application, flag);
                 break;
             default:
@@ -152,10 +158,7 @@ public class RuleBean {
         }
     }
 
-    private void createRuleForEveryone(CreateRuleDto crd, Application application, Flag flag) {
-        // Get all users of that app
-        List<EndUser> users = endUserBean.getUsersOfApp(application.getId());
-
+    private void createRuleForEveryone(CreateRuleDto crd, Application application, Flag flag, List<EndUser> users) {
         // Create array of rules for these users
         users.forEach(endUser -> {
             Rule rule;
@@ -188,7 +191,7 @@ public class RuleBean {
     }
 
     @Transactional
-    private void createABTestingRule(CreateRuleDto crd, Application application, Flag flag) {
+    public void createABTestingRule(CreateRuleDto crd, Application application, Flag flag, List<EndUser> users) {
         // Check value of shareOfA
         int sum = 0;
         for (Share share : crd.getShares()) {
@@ -199,8 +202,6 @@ public class RuleBean {
             throw new InvalidDataException("Sum of shares should be between 0 and 100");
         }
 
-        // Get all users of that app
-        List<EndUser> users = endUserBean.getUsersOfApp(application.getId());
         Collections.shuffle(users);
 
         int last_amount = 0;
@@ -234,16 +235,19 @@ public class RuleBean {
         }
     }
 
+    @Transactional
     public List<Rule> getRulesForFlag(long flag_id) {
         return em.createNamedQuery("Rule.getRulesForFlag", Rule.class)
                 .setParameter("flagId", flag_id)
                 .getResultList();
     }
 
+    @Transactional
     public List<RuleDto> getRulesDtoForFlag(long flag_id) {
         return DtoMapper.toRulesDto(getRulesForFlag(flag_id));
     }
 
+    @Transactional
     public List<RuleDto> getRulesForApp(String clientId) {
         return em.createNamedQuery("Rule.getRulesForApp", Rule.class)
                 .setParameter("clientId", clientId)
@@ -257,6 +261,7 @@ public class RuleBean {
         return DtoMapper.toRulesDto(getRulesForUserID(user_id));
     }
 
+    @Transactional
     public List<Rule> getRulesForUserID(Long user_id) {
         List<Rule> rules = em.createNamedQuery("Rule.getRuleForUserById", Rule.class)
                 .setParameter("clientId", user_id)

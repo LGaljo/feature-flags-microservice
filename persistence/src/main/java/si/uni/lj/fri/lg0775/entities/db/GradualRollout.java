@@ -6,7 +6,6 @@ import si.uni.lj.fri.lg0775.entities.listeners.BaseEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 @Entity

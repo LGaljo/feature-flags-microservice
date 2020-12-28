@@ -60,7 +60,7 @@ public class SeedBean {
 
         FlagDto flagDto3 = new FlagDto();
         flagDto3.setAppId(app1.getId());
-        flagDto3.setDataType(DataType.BOOL);
+        flagDto3.setDataType(DataType.INT);
         flagDto3.setDefaultValue(1);
         flagDto3.setName("Flag3");
         flagDto3.setDescription("Third flag");

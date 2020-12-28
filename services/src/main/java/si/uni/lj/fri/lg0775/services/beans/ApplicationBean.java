@@ -10,7 +10,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -70,6 +69,7 @@ public class ApplicationBean {
     }
 
     // Pridobi vse aplikacije
+    @Transactional
     public List<Application> getAll() {
         return em.createNamedQuery("Application.findAllExceptDeleted", Application.class).getResultList();
     }
@@ -80,12 +80,13 @@ public class ApplicationBean {
         Application application = new Application();
         if (appName != null && !appName.isBlank()) {
             application.setName(appName);
-            application.setFlags(new ArrayList<>());
+//            application.setFlags(new ArrayList<>());
             create(application);
         }
         return application;
     }
 
+    @Transactional
     public Application getApplicationByName(String appName) {
         return em.createNamedQuery("Application.getAppByName", Application.class)
                 .setParameter("applicationName", appName)

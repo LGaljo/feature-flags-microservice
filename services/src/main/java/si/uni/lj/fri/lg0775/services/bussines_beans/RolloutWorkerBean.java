@@ -2,8 +2,8 @@ package si.uni.lj.fri.lg0775.services.bussines_beans;
 
 import si.uni.lj.fri.lg0775.entities.db.*;
 import si.uni.lj.fri.lg0775.services.beans.EndUserBean;
-import si.uni.lj.fri.lg0775.services.beans.RuleBean;
 import si.uni.lj.fri.lg0775.services.beans.GradualRolloutBean;
+import si.uni.lj.fri.lg0775.services.beans.RuleBean;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -15,7 +15,10 @@ import javax.persistence.NoResultException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
