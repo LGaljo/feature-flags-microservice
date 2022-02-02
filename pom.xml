@@ -26,7 +26,7 @@
         <kumuluzee-rest.version>1.3.0</kumuluzee-rest.version>
         <kumuluzee-cors.version>1.0.6</kumuluzee-cors.version>
         <javax.persistence.version>2.2</javax.persistence.version>
-        <postgresql.version>42.2.16</postgresql.version>
+        <postgresql.version>42.2.25</postgresql.version>
     </properties>
 
     <dependencyManagement>
